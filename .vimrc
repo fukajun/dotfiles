@@ -1,4 +1,18 @@
-"-- VUNDLE
+" -- COLOR SCHEME
+if stridx($TERM, "xterm-256color") >= 0
+  colorscheme desert256
+else
+  colorscheme desert
+endif
+
+" -- 256色モード
+if stridx($TERM, "xterm-256color") >= 0
+  set t_Co=256
+else
+  set t_Co=16
+endif
+
+" -- VUNDLE
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
