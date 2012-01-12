@@ -18,7 +18,7 @@ Bundle 'tpope/vim-fugitive'
 
 
 "-- UNITE.VIM
-" 蜈?力モードで開始する
+" 入力モードで開始する
 let g:unite_enable_start_insert=1
 " バッファ一覧
 nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
