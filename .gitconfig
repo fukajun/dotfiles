@@ -1,0 +1,12 @@
+[alias]
+	co = checkout
+	ci = commit
+	st = status
+	br = branch
+	di = diff
+	ad = add
+	ls = log --stat
+	ll = log --oneline --left-right --graph
+[user]
+	name = fukajun
+	email = fukajun@gmail.com
