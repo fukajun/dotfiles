@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =4
+let g:netrw_dirhist_1='/home/fukajun/script'
+let g:netrw_dirhist_2='/home/fukajun/script/testdir'
+let g:netrw_dirhist_3='/home/fukajun/.vim'
+let g:netrw_dirhist_4='/home/fukajun/Titanium Studio Workspace/app'

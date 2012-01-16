@@ -22,12 +22,13 @@ filetype plugin on
 "-- BUNDLE PLUGINS
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/vimshell'
+Bundle 'Shougo/vimproc'
 Bundle 'sgur/unite-git_grep'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-rails'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'tpope/vim-fugitive'
-"Bundle 'rails.vim'
 "Bundle 'project.vim'
 
 
