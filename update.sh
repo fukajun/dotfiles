@@ -16,10 +16,11 @@ else
   exit
 fi
 
-for file in `ls -a $SCRIPT_DIR | grep "^\.\w"`
+for file in `find $SCRIPT_DIR -maxdepth 1 -type f`
 do
-  echo   $src_dir/$file $dis_dir/
-  cp -rp $src_dir/$file $dis_dir/
+  filename=`basename $file`
+  echo   $src_dir/$filename $dis_dir/
+  cp -rp $src_dir/$filename $dis_dir/
 done
 #cp -rp $src_dir/gitconfig $dis_dir/
 
