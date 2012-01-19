@@ -6,7 +6,8 @@
 	di = diff
 	ad = add
 	ls = log --stat
-	ll = log --oneline --left-right --graph
+	ll = log --oneline --left-right
+	lg = log --oneline --graph
 [user]
 	name = jun_fukaya
 [color]
