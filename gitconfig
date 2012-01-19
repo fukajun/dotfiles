@@ -8,5 +8,9 @@
 	ls = log --stat
 	ll = log --oneline --left-right --graph
 [user]
-	name = fukajun
-	email = fukajun@gmail.com
+	name = jun_fukaya
+[color]
+	branch = true
+	diff = true
+	interactive = true
+	status = true
