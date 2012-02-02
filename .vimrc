@@ -63,8 +63,10 @@ nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
 
 
 "-- NEOCOMPLCACHE
-" let g:neocomplcache_enable_at_startup = 1
-smap <Tab> <Plug>(neocomplcache_snippets_expand)
+let g:neocomplcache_enable_at_startup = 1
+"smap <Tab> <Plug>(neocomplcache_snippets_expand)
+imap <C-k>     <Plug>(neocomplcache_snippets_expand)
+smap <C-k>     <Plug>(neocomplcache_snippets_expand)
 
 "-- INDENT
 colorscheme delek
@@ -88,6 +90,7 @@ set expandtab
 set number
 set nohlsearch
 set clipboard=unnamed
+set directory=~/.vim/tmp
 
 
 "-- Display tab multibyte space
