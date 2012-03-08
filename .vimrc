@@ -16,7 +16,6 @@ endif
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-filetype plugin on
 
 
 "-- BUNDLE PLUGINS
@@ -29,8 +28,15 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-rails'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'tpope/vim-fugitive'
+Bundle 'kchmck/vim-coffee-script'
 "Bundle 'project.vim'
+"
+syntax enable
+filetype plugin indent on
 
+noremap <silent> ,ug :<C-u>Unite grep::-iHRn -direction=botright<CR>
+
+source $VIMRUNTIME/macros/matchit.vim
 
 "-- UNITE.VIM
 " 入力モードで開始する
@@ -53,13 +59,16 @@ nnoremap <silent> <C-n> :<C-u>UniteWithBufferDir -buffer-name=files file file_mr
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 " ウィンドウを縦に分割して開く
-au FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
+au FileType unite nnoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')<C-w>L
 au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vsplit')
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 " UNIT GIT GREPを開く
-nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
+"nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
+" ファイル一覧
+nnoremap <silent> ,uss :<C-u>UniteSessionSave<CR>
+nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
 
 "-- NEOCOMPLCACHE
@@ -79,11 +88,17 @@ colorscheme delek
 "colorscheme blue
 "colorscheme darkblue
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkRed   ctermbg=grey
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGreen ctermbg=darkgray
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkRed   ctermbg=none
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGreen ctermbg=black
 let g:indent_guides_enable_on_vim_startup = 1
 
-"-- VIM EDITOR SETTING
+"-- Vim Editor Mapping
+nmap <Space>b :ls<CR>:buffer
+nmap <Space>f :edit .<CR>
+nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
+nmap <Space>V :Vexplore!<CR><CR>
+
+"-- Vim Editor Setting
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -91,7 +106,9 @@ set number
 set nohlsearch
 set clipboard=unnamed
 set directory=~/.vim/tmp
-
+set hidden
+set autoindent
+highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
 "-- Display tab multibyte space
 set lcs=tab:>.,trail:_,extends:\
@@ -107,4 +124,4 @@ autocmd BufReadPost * loadview
 
 
 "-- Cursor line
-"setlocal cursorline
+setlocal cursorline
