@@ -29,8 +29,12 @@ Bundle 'tpope/vim-rails'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'tpope/vim-fugitive'
 Bundle 'kchmck/vim-coffee-script'
+Bundle 'opsplorer'
 "Bundle 'project.vim'
-"
+"Bundle 'refe.vim'
+Bundle ' cmdex'
+Bundle 'scrooloose/nerdtree'
+
 syntax enable
 filetype plugin indent on
 
@@ -73,7 +77,8 @@ nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
 "-- NEOCOMPLCACHE
 let g:neocomplcache_enable_at_startup = 1
-"smap <Tab> <Plug>(neocomplcache_snippets_expand)
+let g:neocomplcache_max_list = 30
+let g:neocomplcache_auto_completion_start_length = 3
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
 
