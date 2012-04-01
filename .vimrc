@@ -30,10 +30,11 @@ Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'tpope/vim-fugitive'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'opsplorer'
+Bundle 'vim-scripts/grep.vim'
 "Bundle 'project.vim'
 "Bundle 'refe.vim'
 Bundle ' cmdex'
-Bundle 'scrooloose/nerdtree'
+Bundle 'fukajun/nerdtree'
 
 syntax enable
 filetype plugin indent on
@@ -74,6 +75,9 @@ au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 nnoremap <silent> ,uss :<C-u>UniteSessionSave<CR>
 nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
+"-- grepvim
+nnoremap <silent> <F3> :Grep<CR>
+nnoremap <silent> <F4> :Rgrep<CR>
 
 "-- NEOCOMPLCACHE
 let g:neocomplcache_enable_at_startup = 1
