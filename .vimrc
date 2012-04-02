@@ -1,40 +1,36 @@
-" -- COLOR SCHEME
-if stridx($TERM, "xterm-256color") >= 0
-  colorscheme desert256
-else
-  colorscheme desert
-endif
-
-" -- 256色モード
-if stridx($TERM, "xterm-256color") >= 0
-  set t_Co=256
-else
-  set t_Co=16
-endif
-
-" -- VUNDLE
+"## Bundle Basic Settings
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
-
-"-- BUNDLE PLUGINS
+"## Bundle plugins
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
 Bundle 'sgur/unite-git_grep'
+Bundle 'vim-scripts/grep.vim'
 Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-rails'
 Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'tpope/vim-fugitive'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'opsplorer'
-Bundle 'vim-scripts/grep.vim'
+Bundle 'fukajun/nerdtree'
+"-- for Ruby
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-rails'
+Bundle 'csexton/rvm.vim'
+Bundle 'ujihisa/rdoc.vim'
+"-- color schemas
+Bundle 'flazz/vim-colorschemes'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'ColorSchemeMenuMaker'
+Bundle 'desert-warm-256'
+Bundle 'gmarik/ingretu'
+Bundle 'tomasr/molokai'
+"-- not use
+"Bundle 'scrooloose/nerdtree'
 "Bundle 'project.vim'
 "Bundle 'refe.vim'
-Bundle ' cmdex'
-Bundle 'fukajun/nerdtree'
 
 syntax enable
 filetype plugin indent on
@@ -43,7 +39,8 @@ noremap <silent> ,ug :<C-u>Unite grep::-iHRn -direction=botright<CR>
 
 source $VIMRUNTIME/macros/matchit.vim
 
-"-- UNITE.VIM
+
+"## Unite.vim
 " 入力モードで開始する
 let g:unite_enable_start_insert=1
 " バッファ一覧
@@ -75,19 +72,33 @@ au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 nnoremap <silent> ,uss :<C-u>UniteSessionSave<CR>
 nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
-"-- grepvim
+
+"## Grep.vim
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
-"-- NEOCOMPLCACHE
+
+"## Neocomplcache
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_max_list = 30
 let g:neocomplcache_auto_completion_start_length = 3
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
 
-"-- INDENT
-colorscheme delek
+
+"## Color schema
+"-- 256色モード
+if stridx($TERM, "xterm-256color") >= 0
+  set t_Co=256
+else
+  set t_Co=16
+endif
+"--- like
+colorscheme molokai
+"colorscheme ingretu
+"colorscheme desert-warm-256
+"colorscheme solarized
+"--- not like
 "colorscheme desert
 "colorscheme peachpuff
 "colorscheme morning
@@ -97,17 +108,21 @@ colorscheme delek
 "colorscheme blue
 "colorscheme darkblue
 let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=DarkRed   ctermbg=none
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=DarkGreen ctermbg=black
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_enable_on_vim_startup = 1
 
-"-- Vim Editor Mapping
-nmap <Space>b :ls<CR>:buffer
+
+"## Vim Editor Mapping
+nmap <Space>b :ls<CR>:buffer<CR>
 nmap <Space>f :edit .<CR>
 nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
 nmap <Space>V :Vexplore!<CR><CR>
+"-- move back after visual yank
+vnoremap y y'>
 
-"-- Vim Editor Setting
+
+"## Vim Editor Setting
 set tabstop=2
 set shiftwidth=2
 set expandtab
@@ -119,18 +134,28 @@ set hidden
 set autoindent
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
-"-- Display tab multibyte space
+
+"## Display tab multibyte space
 set lcs=tab:>.,trail:_,extends:\
 set list
 highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
-au BufRead,BufNew * match JpSpace /　/
+autocmd BufRead,BufNew * match JpSpace /　/
 
 
-"-- 前回開いた場所を記憶
-au BufWritePost,VimLeave * mkview
-autocmd BufReadPost * loadview
-
-
-"-- Cursor line
+"## Cursor line
 setlocal cursorline
+
+
+"## Startup enbale nerdtree
+autocmd vimenter * :NERDTree
+
+
+"## Remember last open curor position
+if has("autocmd")
+  autocmd BufReadPost *
+    \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+    \   exe "normal! g'\"" |
+    \ endif
+endif
+
