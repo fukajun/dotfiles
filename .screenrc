@@ -3,4 +3,10 @@ bind r eval 'echo "Resize window"' 'command -c resize'
 bind -c resize ^] command
 bind -c resize j eval 'resize +1' 'command -c resize'
 bind -c resize k eval 'resize -1' 'command -c resize'
+bind -c REGION } resize +2
+bind -c REGION { resize -2
 hardstatus alwayslastline "%{= Gk} %-Lw%40L>%{b kg} %n %t %{-}%+Lw%-040=%{b km} %l %{.b} %Y/%m/%d %C:%s %A "
+#256色の設定
+termcapinfo xterm 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+term xterm-256color
+defbce on

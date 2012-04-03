@@ -81,36 +81,9 @@ nnoremap <silent> <F4> :Rgrep<CR>
 "## Neocomplcache
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_max_list = 30
-let g:neocomplcache_auto_completion_start_length = 3
+let g:neocomplcache_auto_completion_start_length = 1
 imap <C-k>     <Plug>(neocomplcache_snippets_expand)
 smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-
-
-"## Color schema
-"-- 256色モード
-if stridx($TERM, "xterm-256color") >= 0
-  set t_Co=256
-else
-  set t_Co=16
-endif
-"--- like
-colorscheme molokai
-"colorscheme ingretu
-"colorscheme desert-warm-256
-"colorscheme solarized
-"--- not like
-"colorscheme desert
-"colorscheme peachpuff
-"colorscheme morning
-"colorscheme evening
-"colorscheme elflord
-"colorscheme pablo
-"colorscheme blue
-"colorscheme darkblue
-let g:indent_guides_auto_colors = 0
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
-let g:indent_guides_enable_on_vim_startup = 1
 
 
 "## Vim Editor Mapping
@@ -159,3 +132,37 @@ if has("autocmd")
     \ endif
 endif
 
+
+"## IndentGuide Setting
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_enable_on_vim_startup = 1
+
+
+"## 256 Color mode
+if stridx($TERM, "xterm-256color") >= 0
+  set t_Co=256
+else
+  set t_Co=16
+endif
+
+
+"## Color schema
+"--- like
+colorscheme molokai
+"colorscheme ingretu
+"colorscheme desert-warm-256
+"colorscheme solarized
+"--- Solarized Setting
+"set background=dark
+"let g:solarized_termcolors=256
+"--- not like
+"colorscheme desert
+"colorscheme peachpuff
+"colorscheme morning
+"colorscheme evening
+"colorscheme elflord
+"colorscheme pablo
+"colorscheme blue
+"colorscheme darkblue
