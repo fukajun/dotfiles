@@ -8,6 +8,7 @@ Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'Shougo/vimshell'
 Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimfiler'
 Bundle 'sgur/unite-git_grep'
 Bundle 'vim-scripts/grep.vim'
 Bundle 'tpope/vim-surround'
@@ -105,6 +106,7 @@ set clipboard=unnamed
 set directory=~/.vim/tmp
 set hidden
 set autoindent
+set ignorecase
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
 
@@ -121,7 +123,7 @@ setlocal cursorline
 
 
 "## Startup enbale nerdtree
-autocmd vimenter * :NERDTree
+"autocmd vimenter * :NERDTree
 
 
 "## Remember last open curor position
@@ -131,7 +133,6 @@ if has("autocmd")
     \   exe "normal! g'\"" |
     \ endif
 endif
-
 
 "## IndentGuide Setting
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
@@ -166,3 +167,6 @@ colorscheme molokai
 "colorscheme pablo
 "colorscheme blue
 "colorscheme darkblue
+
+"## Matchpare Color
+hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
