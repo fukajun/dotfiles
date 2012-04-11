@@ -6,10 +6,18 @@
 	di = diff
 	ad = add
 	ls = log --stat
-	ll = log --oneline --left-right
-	lg = log --oneline --graph
+	ll = log --oneline --left-right --graph
+	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
+	pr = pull --rebase
+	# print current branch
+	cbr   = "!$SHELL -c \"git br|grep  '^*'|cut -f 2 -d ' '\""
+
+  # For ODT project
+	odt-pl = pull --rebase origin develop
+	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
+	odt-autops = "!$SHELL -c \"git odt-pr; git odt-ps `git cbr`\""
 [user]
-	name = jun_fukaya
+	name = Jun Fukaya
 [color]
 	branch = true
 	diff = true
