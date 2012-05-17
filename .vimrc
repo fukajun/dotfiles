@@ -1,4 +1,7 @@
 "## Bundle Basic Settings
+"## Install Command
+"## $ git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+"## 
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -202,7 +205,8 @@ call unite#custom_action('file', 'my_vsplit', my_action)
 
 "## Color schema
 "--- like
-colorscheme railscasts
+colorscheme molokai
+"colorscheme railscasts
 "colorscheme ingretu
 "colorscheme desert-warm-256
 "colorscheme solarized
