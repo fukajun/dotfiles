@@ -20,6 +20,9 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'opsplorer'
 Bundle 'fukajun/nerdtree'
 Bundle 'vim-scripts/buftabs'
+Bundle 'vim-scripts/mru.vim'
+Bundle 'vim-scripts/yanktmp.vim'
+Bundle 'Lokaltog/vim-easymotion'
 "Bundle 'vim-scripts/spinner.vim'
 "Bundle 'kien/ctrlp.vim'
 "Execute command in vim
@@ -45,6 +48,8 @@ Bundle 'tomasr/molokai'
 "Bundle 'scrooloose/nerdtree'
 "Bundle 'project.vim'
 "Bundle 'refe.vim'
+"-- play box
+Bundle 'tsukkee/lingr-vim'
 
 syntax enable
 filetype plugin indent on
@@ -85,7 +90,7 @@ au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 " UNIT GIT GREPを開く
 "nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
 " ファイル一覧
-nnoremap <silent> ,uss :<C-u>UniteSessionSave<CR>
+nnoremap <silent> ,uss <C-w>t:<C-u>UniteSessionSave<CR>
 nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
 
@@ -104,13 +109,22 @@ vnoremap [MyPrefix]P "yP
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
+"## Linger setting
+"let g:lingr_vim_user = "fukajuns.shark@gmail.com"
+"let g:lingr_vim_password = "sasakama"
 
 "## Neocomplcache
-"let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_max_list = 30
-"let g:neocomplcache_auto_completion_start_length = 1
-"imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-"smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+set completeopt=".menuoeb"
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_max_list = 30
+let g:neocomplcache_auto_completion_start_length = 1
+let g:neocomplcache_enable_ignore_case = 0
+imap <C-k>     <Plug>(neocomplcache_snippets_expand)
+smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+
+"## EasyEmotion
+let g:EasyMotion_leader_key = '_'
+nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
 
 
 "## Vim Editor Mapping
@@ -205,6 +219,10 @@ call unite#custom_action('file', 'my_vsplit', my_action)
 
 "## Color schema
 "--- like
+<<<<<<< HEAD
+=======
+"colorscheme wombat256mod
+>>>>>>> update vimrc
 colorscheme molokai
 "colorscheme railscasts
 "colorscheme ingretu
