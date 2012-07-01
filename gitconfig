@@ -18,6 +18,7 @@
 	odt-autops = "!$SHELL -c \"git odt-pr; git odt-ps `git cbr`\""
 [user]
 	name = Jun Fukaya
+	email = fukajun@gmail.com
 [color]
 	branch = true
 	diff = true

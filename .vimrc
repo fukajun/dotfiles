@@ -33,7 +33,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-rails'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
-Bundle 'tools/migemo.vim'
 Bundle 't9md/vim-foldtext'
 "Bundle 'vim-scripts/YankRing.vim'
 "-- color schemas
@@ -219,11 +218,8 @@ call unite#custom_action('file', 'my_vsplit', my_action)
 
 "## Color schema
 "--- like
-<<<<<<< HEAD
-=======
-"colorscheme wombat256mod
->>>>>>> update vimrc
-colorscheme molokai
+colorscheme wombat256mod
+"colorscheme molokai
 "colorscheme railscasts
 "colorscheme ingretu
 "colorscheme desert-warm-256
