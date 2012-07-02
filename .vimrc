@@ -9,8 +9,8 @@ call vundle#rc()
 "## Bundle plugins
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/vimshell'
-Bundle 'Shougo/vimproc'
+"Bundle 'Shougo/vimshell'
+"Bundle 'Shougo/vimproc'
 Bundle 'Shougo/vimfiler'
 Bundle 'sgur/unite-git_grep'
 Bundle 'tpope/vim-surround'
@@ -33,6 +33,7 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-rails'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
+Bundle 'tools/migemo.vim'
 Bundle 't9md/vim-foldtext'
 "Bundle 'vim-scripts/YankRing.vim'
 "-- color schemas
@@ -113,14 +114,14 @@ nnoremap <silent> <F4> :Rgrep<CR>
 "let g:lingr_vim_password = "sasakama"
 
 "## Neocomplcache
-set completeopt=".menuoeb"
-let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_max_list = 30
-let g:neocomplcache_auto_completion_start_length = 1
-let g:neocomplcache_enable_ignore_case = 0
-imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-
+"set completeopt=".menuoeb"
+"let g:neocomplcache_enable_at_startup = 1
+"let g:neocomplcache_max_list = 30
+"let g:neocomplcache_auto_completion_start_length = 1
+"let g:neocomplcache_enable_ignore_case = 0
+"imap <C-k>     <Plug>(neocomplcache_snippets_expand)
+"smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+"
 "## EasyEmotion
 let g:EasyMotion_leader_key = '_'
 nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
@@ -218,8 +219,8 @@ call unite#custom_action('file', 'my_vsplit', my_action)
 
 "## Color schema
 "--- like
-colorscheme wombat256mod
-"colorscheme molokai
+"colorscheme wombat256mod
+colorscheme molokai
 "colorscheme railscasts
 "colorscheme ingretu
 "colorscheme desert-warm-256
