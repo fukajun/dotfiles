@@ -22,6 +22,7 @@ Bundle 'fukajun/nerdtree'
 Bundle 'vim-scripts/buftabs'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'vim-scripts/yanktmp.vim'
+Bundle 'vim-scripts/SQLUtilities'
 Bundle 'Lokaltog/vim-easymotion'
 "Bundle 'vim-scripts/spinner.vim'
 "Bundle 'kien/ctrlp.vim'
@@ -33,7 +34,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-rails'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
-Bundle 'tools/migemo.vim'
 Bundle 't9md/vim-foldtext'
 "Bundle 'vim-scripts/YankRing.vim'
 "-- color schemas
@@ -144,7 +144,7 @@ set shiftwidth=2
 set expandtab
 set number
 set nohlsearch
-set clipboard=unnamed
+set clipboard=unnamed,autoselect
 set directory=~/.vim/tmp
 set hidden
 set autoindent
@@ -164,10 +164,34 @@ autocmd BufRead,BufNew * match JpSpace /　/
 "## Cursor line
 setlocal cursorline
 
-
-"## Startup enbale nerdtree
-"autocmd vimenter * :NERDTree
-
+"## Status line
+" ステータスラインの表示
+  set statusline+=[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':'.winnr().'/'.winnr('$'):''}]
+  set statusline=%<     " 行が長すぎるときに切り詰める位置
+  set statusline+=[%n]  " バッファ番号
+  set statusline+=%m    " %m 修正フラグ
+  set statusline+=%r    " %r 読み込み専用フラグ
+  set statusline+=%h    " %h ヘルプバッファフラグ
+  set statusline+=%w    " %w プレビューウィンドウフラグ
+  set statusline+=%{'['.(&fenc!=''?&fenc:&enc).':'.&ff.']'}  " fencとffを表示
+  set statusline+=%y    " バッファ内のファイルのタイプ
+  set statusline+=\     " 空白スペース
+if winwidth(0) >= 130
+  set statusline+=%F    " バッファ内のファイルのフルパス
+else
+  set statusline+=%t    " ファイル名のみ
+endif
+  set statusline+=%=    " 左寄せ項目と右寄せ項目の区切り
+  set statusline+=%{fugitive#statusline()}  " Gitのブランチ名を表示
+  set statusline+=\ \   " 空白スペース2個
+  set statusline+=%1l   " 何行目にカーソルがあるか
+  set statusline+=/
+  set statusline+=%L    " バッファ内の総行数
+  set statusline+=,
+  set statusline+=%c    " 何列目にカーソルがあるか
+  set statusline+=%V    " 画面上の何列目にカーソルがあるか
+  set statusline+=\ \   " 空白スペース2個
+  set statusline+=%P    " ファイル内の何％の位置にあるか
 
 "## Remember last open curor position
 if has("autocmd")
@@ -177,6 +201,8 @@ if has("autocmd")
     \ endif
 endif
 
+"## auto adding quickfix to vimgrep
+au QuickfixCmdPost vimgrep cw
 
 "## IndentGuide Setting
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
@@ -219,8 +245,8 @@ call unite#custom_action('file', 'my_vsplit', my_action)
 
 "## Color schema
 "--- like
-"colorscheme wombat256mod
-colorscheme molokai
+colorscheme wombat256mod
+"colorscheme molokai
 "colorscheme railscasts
 "colorscheme ingretu
 "colorscheme desert-warm-256
