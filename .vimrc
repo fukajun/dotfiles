@@ -92,7 +92,7 @@ nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 "== For ctrlp.vim settings
 let g:ctrlp_max_height = 20
 let g:ctrlp_working_path_mode = 'rc'
-let g:ctrlp_map = '<c-n>'
+let g:ctrlp_map = '<c-m>'
 let g:ctrlp_cmd = 'CtrlPMRUFiles'
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 "nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>

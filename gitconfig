@@ -9,8 +9,11 @@
 	ll = log --oneline --left-right --graph
 	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
 	pr = pull --rebase
+	rst = reset
 	# print current branch
 	cbr = "!$SHELL -c \"git br|grep  '^*'|cut -f 2 -d ' '\""
+  # checkout new branch from master
+	cob = "!$SHELL -c \"git checkout -b $1 master\""
 
 	odt-pl = pull --rebase origin develop
 	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
@@ -23,3 +26,6 @@
 	diff = true
 	interactive = true
 	status = true
+	ui = auto
+[core]
+	editor = vim
