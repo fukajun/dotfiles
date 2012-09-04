@@ -14,6 +14,9 @@
 	cbr = "!$SHELL -c \"git br|grep  '^*'|cut -f 2 -d ' '\""
   # checkout new branch from master
 	cob = "!$SHELL -c \"git checkout -b $1 master\""
+  # delete all branch ignore master
+  brd = "!$SHELL -c \"git branch | grep -v '\<master\>' | xargs  git branch -d\""
+  brD = "!$SHELL -c \"git branch | grep -v '\<master\>' | xargs  git branch -D\""
 
 	odt-pl = pull --rebase origin develop
 	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
