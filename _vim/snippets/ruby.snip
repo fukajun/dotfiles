@@ -1,0 +1,80 @@
+snippet lambda error
+abbr lambda should raise error 
+    lambda{
+      ${1}
+    }.should raise_error
+
+snippet beforeeach
+abbr before(:each) do
+    before(:each) do
+      ${1}
+    end
+
+snippet it
+abbr it do
+    it "${1}" do
+      ${2}
+    end
+
+snippet context
+abbr context do
+    context "${1}" do
+      it "${2}" do
+        ${3}
+      end
+    end
+
+snippet describe 
+abbr describe do
+    describe "${1}" do
+      context "${2}" do
+        it "${3}" do
+          ${4}
+        end
+      end
+    end
+
+snippet     if
+abbr        if end
+    if ${1:condition}
+        ${2}
+    end
+
+snippet     def
+abbr        def end
+    def ${1:func_name}
+        ${2}
+    end
+
+snippet     do
+abbr        do end
+    do
+        ${1}
+    end
+
+snippet     dovar
+abbr        do |var| end
+    do |${1:var}|
+        ${2}
+    end
+
+snippet     block
+abbr        { |var| }
+    {
+        ${1}
+    }
+
+snippet     blockvar
+abbr        { |var| }
+    { |${1:var}|
+        ${2}
+    }
+
+snippet     edn
+abbr        => end?
+    end
+
+snippet     urlencode
+    # coding: utf-8
+    require 'erb'
+    puts ERB::Util.url_encode '${1}'
