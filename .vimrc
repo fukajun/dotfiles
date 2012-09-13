@@ -6,10 +6,10 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 "== Bundle plugins
+Bundle 'gmarik/vundle'
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
-"Bundle 'Shougo/vimshell'
-Bundle 'Shougo/vimproc'
+Bundle 'Shougo/neocomplcache-snippets-complete'
 Bundle 'sgur/unite-git_grep'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/grep.vim'
@@ -18,6 +18,8 @@ Bundle 'vim-scripts/buftabs'
 Bundle 'vim-scripts/yanktmp.vim'
 Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
+Bundle 'msanders/snipmate.vim'
+'
 "-- Move Cursor plugin
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'edsono/vim-matchit'
@@ -26,13 +28,13 @@ Bundle 'fukajun/nerdtree'
 Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'vim-scripts/spinner.vim'
-"Bundle 'Shougo/vimfiler'
 "-- Execute command in vim
 "Bundle 'thinca/vim-quickrun'
 "-- for Ruby
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-rails'
+"Bundle 'tpope/vim-rails'
+"Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
@@ -46,20 +48,25 @@ Bundle 'desert-warm-256'
 Bundle 'gmarik/ingretu'
 Bundle 'tomasr/molokai'
 "-- not use
+"Bundle 'Shougo/vimshell'
+"Bundle 'Shougo/vimproc'
+"Bundle 'Shougo/vimfiler'
 "Bundle 'scrooloose/nerdtree'
 "Bundle 'project.vim'
 "Bundle 'refe.vim'
 "Bundle 'opsplorer'
-"-- play box
 "Bundle 'tsukkee/lingr-vim'
-"-- facebook
-Bundle 'daisuzu/facebook.vim'
-Bundle 'mattn/webapi-vim'
-Bundle 'tyru/open-browser.vim'
+"Bundle 'daisuzu/facebook.vim'
+"Bundle 'mattn/webapi-vim'
+"Bundle 'tyru/open-browser.vim'
 
-"== For coffee-script
+"== For CoffeeScript
 syntax enable
 filetype plugin indent on
+
+"== For NERDTree
+nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
+"autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
 
 "== For Unite.vim
 let g:unite_enable_start_insert=1
@@ -92,7 +99,7 @@ nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 "== For ctrlp.vim settings
 let g:ctrlp_max_height = 20
 let g:ctrlp_working_path_mode = 'rc'
-let g:ctrlp_map = '<c-m>'
+let g:ctrlp_map = '<c-n>'
 let g:ctrlp_cmd = 'CtrlPMRUFiles'
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 "nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>
@@ -118,13 +125,23 @@ nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
 "== For Neocomplcache
-"set completeopt=".menuoeb"
-"let g:neocomplcache_enable_at_startup = 1
-"let g:neocomplcache_max_list = 30
-"let g:neocomplcache_auto_completion_start_length = 1
-"let g:neocomplcache_enable_ignore_case = 0
-"imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-"smap <C-k>     <Plug>(neocomplcache_snippets_expand)
+"= Need this plugins
+"=  'Shougo/neocomplcache'
+"=  'Shougo/neocomplcache-snippets-complete'
+set completeopt=menuone
+let g:neocomplcache_next_keyword_patterns = {}
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_max_list = 40
+let g:neocomplcache_auto_completion_start_length = 1
+let g:neocomplcache_enable_ignore_case = 0
+let g:neocomplcache_enable_camel_case_completion = 0
+let g:neocomplcache_enable_underbar_completion = 0
+imap <C-k> <Plug>(neocomplcache_snippets_expand)
+smap <C-k> <Plug>(neocomplcache_snippets_expand)
+let g:neocomplcache_snippets_dir = $HOME.'/.vim/snippets'
+if !exists('g:neocomplcache_keyword_patterns')
+  let g:neocomplcache_keyword_patterns = {}
+endif
 
 "== For EasyEmotion
 let g:EasyMotion_leader_key = '_'
@@ -146,7 +163,7 @@ set shiftwidth=2
 set expandtab
 set number
 set nohlsearch
-set clipboard=unnamed,autoselect
+set clipboard=unnamed
 set directory=~/.vim/tmp
 set hidden
 set autoindent
@@ -201,6 +218,10 @@ if has("autocmd")
     \ endif
 endif
 
+"== Quickfix Controlle
+nnoremap <silent> <C-u> :<C-u>cnext<CR>
+nnoremap <silent> <C-i> :<C-u>cprevious<CR>
+
 "== auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
 
@@ -239,3 +260,6 @@ colorscheme wombat256mod
 
 "==  Matchpare Color
 hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
+
+"== CUSTOME Mapping
+command! VimrcReload :source ~/.vimrc
