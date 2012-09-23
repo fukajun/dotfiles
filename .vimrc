@@ -210,6 +210,9 @@ endif
   set statusline+=\ \   " 空白スペース2個
   set statusline+=%P    " ファイル内の何％の位置にあるか
 
+"== for fugitive.vim
+nnoremap <silent> ,gst :<c-u>Gstatus<CR>
+
 "== Remember last open curor position
 if has("autocmd")
   autocmd BufReadPost *
