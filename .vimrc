@@ -219,8 +219,9 @@ if has("autocmd")
 endif
 
 "== Quickfix Controlle
-nnoremap <silent> <C-u> :<C-u>cnext<CR>
-nnoremap <silent> <C-i> :<C-u>cprevious<CR>
+" 標準のショートカットとかぶっている
+"nnoremap <silent> <C-u> :<C-u>cnext<CR>
+"nnoremap <silent> <C-i> :<C-u>cprevious<CR>
 
 "== auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
