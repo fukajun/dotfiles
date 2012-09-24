@@ -210,9 +210,6 @@ endif
   set statusline+=\ \   " 空白スペース2個
   set statusline+=%P    " ファイル内の何％の位置にあるか
 
-"== for fugitive.vim
-nnoremap <silent> ,gst :<c-u>Gstatus<CR>
-
 "== Remember last open curor position
 if has("autocmd")
   autocmd BufReadPost *
@@ -221,10 +218,16 @@ if has("autocmd")
     \ endif
 endif
 
-"== Quickfix Controlle
-" 標準のショートカットとかぶっている
-"nnoremap <silent> <C-u> :<C-u>cnext<CR>
-"nnoremap <silent> <C-i> :<C-u>cprevious<CR>
+"== for Fugitive.vim
+nnoremap <silent> ,gst :<c-u>Gstatus<CR>
+
+"== for Quickfix Controlle
+" Fallback
+nnoremap Q q
+nnoremap q  <Nop>
+" For quickfix list
+nnoremap qj  :cnext<Return>
+nnoremap qk  :cprevious<Return>
 
 "== auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
@@ -265,5 +268,5 @@ colorscheme wombat256mod
 "==  Matchpare Color
 hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
 
-"== CUSTOME Mapping
+"== Custome Mapping
 command! VimrcReload :source ~/.vimrc
