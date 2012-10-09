@@ -33,3 +33,7 @@ git-now() {
 # ALIAS
 # For bundle exec
 alias be='bundle exec'
+alias gst="git status -b -s&& git stash list"
+PATH=${HOME}/bin:${PATH}
+export PATH
+echo "load commands"
