@@ -10,3 +10,4 @@ hardstatus alwayslastline "%{= Gk} %-Lw%40L>%{b kg} %n %t %{-}%+Lw%-040=%{b km} 
 termcapinfo xterm 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
 term xterm-256color
 defbce on
+shell -${SHELL}
