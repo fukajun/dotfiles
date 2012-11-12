@@ -19,12 +19,18 @@ Bundle 'vim-scripts/yanktmp.vim'
 Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
 Bundle 'msanders/snipmate.vim'
+Bundle 'lucapette/vim-ruby-doc'
+"Bundle 'tanabe/ToggleCase-vim'
+"Bundle 'Townk/vim-autoclose'
 "Bundle 'quickhl.vim'
-"Bundle 'autoclose'
 "Bundle 'winreseizer'
-'
+"Bundle 't9md/vim-foldtext'
+
+"-- Save session
+"Bundle 'osyo-manga/vim-reanimate'
+
 "-- Move Cursor plugin
-Bundle 'Lokaltog/vim-easymotion'
+"Bundle 'Lokaltog/vim-easymotion'
 Bundle 'edsono/vim-matchit'
 "-- File manipiration plugin
 Bundle 'fukajun/nerdtree'
@@ -41,7 +47,6 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
-Bundle 't9md/vim-foldtext'
 "-- color schemas
 Bundle 'jpo/vim-railscasts-theme'
 Bundle 'flazz/vim-colorschemes'
@@ -69,7 +74,15 @@ filetype plugin indent on
 
 "== For NERDTree
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
-"autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
+autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
+
+"== For vimfiler
+"nnoremap <silent> <C-]> :<C-u>:VimFiler -buffer-name=explorer -split -winwidth=45 -toggle -no-quit<CR>
+"function! g:my_vimfiler_settings()
+"  nmap     <buffer><expr><Cr> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
+"  nnoremap <buffer>s          :call vimfiler#mappings#do_action('my_split')<Cr>
+"  nnoremap <buffer>v          :call vimfiler#mappings#do_action('my_vsplit')<Cr>
+"endfunction
 
 "== For Unite.vim
 let g:unite_enable_start_insert=1
@@ -103,7 +116,7 @@ nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 let g:ctrlp_max_height = 20
 let g:ctrlp_working_path_mode = 'rc'
 let g:ctrlp_map = '<c-n>'
-let g:ctrlp_cmd = 'CtrlPMRUFiles'
+let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 "nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>
 
@@ -147,8 +160,8 @@ if !exists('g:neocomplcache_keyword_patterns')
 endif
 
 "== For EasyEmotion
-let g:EasyMotion_leader_key = '_'
-nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
+"let g:EasyMotion_leader_key = '_'
+"nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
 
 "== Vim Editor Mapping
 nmap <Space>b :ls<CR>:buffer<CR>
@@ -223,6 +236,10 @@ endif
 
 "== for Fugitive.vim
 nnoremap <silent> ,gst :<c-u>Gstatus<CR>
+nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
+
+"== for toggle case vim
+nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
 
 "== for Quickfix Controlle
 " Fallback
@@ -241,12 +258,42 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 
-"== 256 Color mode
-if stridx($TERM, "xterm-256color") >= 0
-  set t_Co=256
-else
-  set t_Co=16
-endif
+"== folding for ruby
+"
+"RUBY
+augroup ft_ruby
+  au!
+  au Filetype ruby setlocal foldexpr=RubyMethodFold(v:lnum)
+  au Filetype ruby setlocal foldmethod=expr
+
+  function! RubyMethodFold(line)
+    let stack = synstack(a:line, 1)
+    for synid in stack
+      if synid == 153
+        return 1
+      endif
+    endfor
+
+    if getline(a:line) =~ '\s*def '
+      return 1
+    endif
+
+    return 0
+  endfunction
+augroup END
+"function! RubyMethodFold(line)
+"  let line_is_method_or_end = synIDattr(synID(a:line,1,0), 'name') == 'rubyMethodBlock'
+"  let line_is_def = getline(a:line) =~ '\s*def '
+"  return line_is_method_or_end || line_is_def
+"endfunction
+"set foldexpr=RubyMethodFold(v:lnum)
+"
+""== 256 Color mode
+"if stridx($TERM, "xterm-256color") >= 0
+"  set t_Co=256
+"else
+"  set t_Co=16
+"endif
 
 "== Color schema
 colorscheme wombat256mod
