@@ -11,6 +11,7 @@ Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'Shougo/neocomplcache-snippets-complete'
 Bundle 'sgur/unite-git_grep'
+Bundle 'taka84u9/unite-git'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/grep.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -34,16 +35,16 @@ Bundle 'lucapette/vim-ruby-doc'
 Bundle 'edsono/vim-matchit'
 "-- File manipiration plugin
 Bundle 'fukajun/nerdtree'
-Bundle 'kien/ctrlp.vim'
+"Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
-"Bundle 'thinca/vim-quickrun'
+Bundle 'thinca/vim-quickrun'
 "-- for Ruby
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-fugitive'
-"Bundle 'tpope/vim-rails'
-"Bundle 'vim-ruby/vim-ruby'
+Bundle 'tpope/vim-rails'
+Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
@@ -94,6 +95,7 @@ nnoremap <silent> ,um :<C-u>Unite file_mru<CR>
 nnoremap <silent> ,uu :<C-u>Unite buffer file_mru<CR>
 nnoremap <silent> ,uy :<C-u>Unite history/yank<CR>
 " 全部乗せ
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_cached buffer file_mru bookmark file<CR>
 nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
 "nnoremap <silent> <C-n> :<C-u>UniteWithBufferDir -buffer-name=file_mru bookmark <CR>
 " ウィンドウを分割して開く
@@ -113,17 +115,17 @@ nnoremap <silent> ,uss <C-w>t:<C-u>UniteSessionSave<CR>
 nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 
 "== For ctrlp.vim settings
-let g:ctrlp_max_height = 20
-let g:ctrlp_working_path_mode = 'rc'
-let g:ctrlp_map = '<c-n>'
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
+"let g:ctrlp_max_height = 20
+"let g:ctrlp_working_path_mode = 'rc'
+"let g:ctrlp_map = '<c-n>'
+"let g:ctrlp_cmd = 'CtrlPMixed'
+"let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 "nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>
 
 "== For yanktmp settings
-map <silent> sy :call YanktmpYank()<CR> 
-map <silent> sp :call YanktmpPaste_p()<CR> 
-map <silent> sP :call YanktmpPaste_P()<CR>
+"map <silent> sy :call YanktmpYank()<CR> 
+"map <silent> sp :call YanktmpPaste_p()<CR> 
+"map <silent> sP :call YanktmpPaste_P()<CR>
 
 "== コピペ
 noremap [MyPrefix] <Nop>
@@ -258,7 +260,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 
-"== folding for ruby
+"== Folding for ruby
 "
 "RUBY
 augroup ft_ruby
@@ -281,19 +283,9 @@ augroup ft_ruby
     return 0
   endfunction
 augroup END
-"function! RubyMethodFold(line)
-"  let line_is_method_or_end = synIDattr(synID(a:line,1,0), 'name') == 'rubyMethodBlock'
-"  let line_is_def = getline(a:line) =~ '\s*def '
-"  return line_is_method_or_end || line_is_def
-"endfunction
-"set foldexpr=RubyMethodFold(v:lnum)
-"
-""== 256 Color mode
-"if stridx($TERM, "xterm-256color") >= 0
-"  set t_Co=256
-"else
-"  set t_Co=16
-"endif
+
+"== User keymap
+vnoremap  <silent> <C-p> "0p<CR>
 
 "== Color schema
 colorscheme wombat256mod
