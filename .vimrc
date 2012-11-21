@@ -1,6 +1,12 @@
+"------------------------------------------------------------------------
 "== Bundle Basic Settings
 "=> Install Command
 "=> $ git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+"------------------------------------------------------------------------
+"##
+"## For Vundle settins
+"##
+"
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -21,26 +27,16 @@ Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
 Bundle 'msanders/snipmate.vim'
 Bundle 'lucapette/vim-ruby-doc'
-"Bundle 'tanabe/ToggleCase-vim'
-"Bundle 'Townk/vim-autoclose'
-"Bundle 'quickhl.vim'
-"Bundle 'winreseizer'
-"Bundle 't9md/vim-foldtext'
-
-"-- Save session
 "Bundle 'osyo-manga/vim-reanimate'
-
 "-- Move Cursor plugin
-"Bundle 'Lokaltog/vim-easymotion'
 Bundle 'edsono/vim-matchit'
 "-- File manipiration plugin
 Bundle 'fukajun/nerdtree'
-"Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
 Bundle 'thinca/vim-quickrun'
-"-- for Ruby
+"-- For Ruby
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-rails'
@@ -48,7 +44,7 @@ Bundle 'vim-ruby/vim-ruby'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'csexton/rvm.vim'
 Bundle 'ujihisa/rdoc.vim'
-"-- color schemas
+"-- Color schemas
 Bundle 'jpo/vim-railscasts-theme'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'altercation/vim-colors-solarized'
@@ -56,7 +52,14 @@ Bundle 'ColorSchemeMenuMaker'
 Bundle 'desert-warm-256'
 Bundle 'gmarik/ingretu'
 Bundle 'tomasr/molokai'
-"-- not use
+"-- Not use
+"Bundle 'Lokaltog/vim-easymotion'
+"Bundle 'tanabe/ToggleCase-vim'
+"Bundle 'Townk/vim-autoclose'
+"Bundle 'quickhl.vim'
+"Bundle 'winreseizer'
+"Bundle 't9md/vim-foldtext'
+"Bundle 'kien/ctrlp.vim'
 "Bundle 'Shougo/vimshell'
 "Bundle 'Shougo/vimproc'
 "Bundle 'Shougo/vimfiler'
@@ -69,6 +72,10 @@ Bundle 'tomasr/molokai'
 "Bundle 'mattn/webapi-vim'
 "Bundle 'tyru/open-browser.vim'
 
+"##
+"## For Plugin settings
+"##
+"
 "== For CoffeeScript
 syntax enable
 filetype plugin indent on
@@ -77,27 +84,12 @@ filetype plugin indent on
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
 autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
 
-"== For vimfiler
-"nnoremap <silent> <C-]> :<C-u>:VimFiler -buffer-name=explorer -split -winwidth=45 -toggle -no-quit<CR>
-"function! g:my_vimfiler_settings()
-"  nmap     <buffer><expr><Cr> vimfiler#smart_cursor_map("\<Plug>(vimfiler_expand_tree)", "\<Plug>(vimfiler_edit_file)")
-"  nnoremap <buffer>s          :call vimfiler#mappings#do_action('my_split')<Cr>
-"  nnoremap <buffer>v          :call vimfiler#mappings#do_action('my_vsplit')<Cr>
-"endfunction
-
 "== For Unite.vim
 let g:unite_enable_start_insert=1
-nnoremap <silent> ,ub :<C-u>Unite buffer<CR>
+" buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
-nnoremap <silent> ,uf :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-nnoremap <silent> ,ur :<C-u>Unite -buffer-name=register register<CR>
-nnoremap <silent> ,um :<C-u>Unite file_mru<CR>
-nnoremap <silent> ,uu :<C-u>Unite buffer file_mru<CR>
-nnoremap <silent> ,uy :<C-u>Unite history/yank<CR>
-" 全部乗せ
+" file list
 nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_cached buffer file_mru bookmark file<CR>
-nnoremap <silent> ,ua :<C-u>UniteWithBufferDir -buffer-name=files buffer file_mru bookmark file<CR>
-"nnoremap <silent> <C-n> :<C-u>UniteWithBufferDir -buffer-name=file_mru bookmark <CR>
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -108,11 +100,8 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 " GIT GREPを開く
-noremap <silent> ,ug :<C-u>Unite grep::-iHRn -direction=botright<CR>
-"nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
-" セッション管理
-nnoremap <silent> ,uss <C-w>t:<C-u>UniteSessionSave<CR>
-nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
+"noremap <silent> ,ug :<C-u>Unite grep::-iHRn -direction=botright<CR>
+nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
 
 "== For ctrlp.vim settings
 "let g:ctrlp_max_height = 20
@@ -121,22 +110,6 @@ nnoremap <silent> ,usl :<C-u>UniteSessionLoad<CR>
 "let g:ctrlp_cmd = 'CtrlPMixed'
 "let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
 "nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>
-
-"== For yanktmp settings
-"map <silent> sy :call YanktmpYank()<CR> 
-"map <silent> sp :call YanktmpPaste_p()<CR> 
-"map <silent> sP :call YanktmpPaste_P()<CR>
-
-"== コピペ
-noremap [MyPrefix] <Nop>
-map <Space> [MyPrefix]
-" クリップボードの内容を名前付きレジスタに逃がす
-nnoremap [MyPrefix]" :<C-u>let @y=@*<CR>
-" 名前付きレジスタからペースト
-nnoremap [MyPrefix]p "yp
-nnoremap [MyPrefix]P "yP
-vnoremap [MyPrefix]p "yp
-vnoremap [MyPrefix]P "yP
 
 "== For Grep.vim
 nnoremap <silent> <F3> :Grep<CR>
@@ -175,6 +148,17 @@ noremap <expr> gm (virtcol('$')/2).'\|'
 vnoremap y y'>
 inoremap jj <Esc>
 
+"== for Fugitive.vim
+nnoremap <silent> ,gst :<c-u>Gstatus<CR>
+nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
+
+"== For toggle case vim
+nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
+
+"##
+"## For Vim settings
+"##
+
 "==  Vim Editor Setting
 set tabstop=2
 set shiftwidth=2
@@ -195,6 +179,9 @@ set list
 highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
 autocmd BufRead,BufNew * match JpSpace /　/
+
+"== User keymap
+vnoremap  <silent> <C-p> "0p<CR>
 
 "==  Cursor line
 setlocal cursorline
@@ -236,14 +223,7 @@ if has("autocmd")
     \ endif
 endif
 
-"== for Fugitive.vim
-nnoremap <silent> ,gst :<c-u>Gstatus<CR>
-nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
-
-"== for toggle case vim
-nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
-
-"== for Quickfix Controlle
+"== For Quickfix Controlle
 " Fallback
 nnoremap Q q
 nnoremap q  <Nop>
@@ -251,7 +231,7 @@ nnoremap q  <Nop>
 nnoremap qj  :cnext<Return>
 nnoremap qk  :cprevious<Return>
 
-"== auto adding quickfix to vimgrep
+"== Auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
 
 "== IndentGuide Setting
@@ -259,33 +239,6 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
-
-"== Folding for ruby
-"
-"RUBY
-augroup ft_ruby
-  au!
-  au Filetype ruby setlocal foldexpr=RubyMethodFold(v:lnum)
-  au Filetype ruby setlocal foldmethod=expr
-
-  function! RubyMethodFold(line)
-    let stack = synstack(a:line, 1)
-    for synid in stack
-      if synid == 153
-        return 1
-      endif
-    endfor
-
-    if getline(a:line) =~ '\s*def '
-      return 1
-    endif
-
-    return 0
-  endfunction
-augroup END
-
-"== User keymap
-vnoremap  <silent> <C-p> "0p<CR>
 
 "== Color schema
 colorscheme wombat256mod
