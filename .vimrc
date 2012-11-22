@@ -89,7 +89,7 @@ let g:unite_enable_start_insert=1
 " buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 " file list
-nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_cached buffer file_mru bookmark file<CR>
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file<CR>
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -138,26 +138,28 @@ endif
 "let g:EasyMotion_leader_key = '_'
 "nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
 
-"== Vim Editor Mapping
-nmap <Space>b :ls<CR>:buffer<CR>
-nmap <Space>f :edit .<CR>
-nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
-nmap <Space>V :Vexplore!<CR><CR>
-noremap <expr> gm (virtcol('$')/2).'\|'
 "-- move back after visual yank
 vnoremap y y'>
 inoremap jj <Esc>
 
 "== for Fugitive.vim
+function! ToggleGstatus()
+  if bufexists(".git/index")
+    execute "bw .git/index"
+  else
+    execute "Gstatus"
+  endif
+endfunction
 nnoremap <silent> ,gst :<c-u>Gstatus<CR>
-nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
+"nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
+nnoremap <silent> <C-@> :call ToggleGstatus()<CR>
 
 "== For toggle case vim
 nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
 
-"##
-"## For Vim settings
-"##
+"######################
+"#  For Vim settings
+"######################
 
 "==  Vim Editor Setting
 set tabstop=2
@@ -180,8 +182,22 @@ highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
 autocmd BufRead,BufNew * match JpSpace /　/
 
+"== User function
+function! ToggleGstatus()
+  if bufexists(".git/index")
+    execute "bw .git/index"
+  else
+    execute "Gstatus"
+  endif
+endfunction
+
 "== User keymap
 vnoremap  <silent> <C-p> "0p<CR>
+nmap <Space>b :ls<CR>:buffer<CR>
+nmap <Space>f :edit .<CR>
+nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
+nmap <Space>V :Vexplore!<CR><CR>
+noremap <expr> gm (virtcol('$')/2).'\|'
 
 "==  Cursor line
 setlocal cursorline
