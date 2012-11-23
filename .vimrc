@@ -15,7 +15,7 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neocomplcache-snippets-complete'
+Bundle 'Shougo/neosnippet'
 Bundle 'sgur/unite-git_grep'
 Bundle 'taka84u9/unite-git'
 Bundle 'tpope/vim-surround'
@@ -162,6 +162,7 @@ nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
 "######################
 
 "==  Vim Editor Setting
+set visualbell
 set tabstop=2
 set shiftwidth=2
 set expandtab
