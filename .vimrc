@@ -27,7 +27,8 @@ Bundle 'vim-scripts/SQLUtilities'
 Bundle 'vim-scripts/Align'
 Bundle 'msanders/snipmate.vim'
 Bundle 'lucapette/vim-ruby-doc'
-"Bundle 'osyo-manga/vim-reanimate'
+Bundle 'osyo-manga/vim-reanimate'
+Bundle 'osyo-manga/unite-quickfix'
 "-- Move Cursor plugin
 Bundle 'edsono/vim-matchit'
 "-- File manipiration plugin
@@ -99,9 +100,6 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
-" GIT GREPを開く
-"noremap <silent> ,ug :<C-u>Unite grep::-iHRn -direction=botright<CR>
-nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
 
 "== For ctrlp.vim settings
 "let g:ctrlp_max_height = 20
@@ -114,6 +112,16 @@ nnoremap <silent> ,ug :<C-u>Unite<space>vcs_grep/git<CR>
 "== For Grep.vim
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
+
+"== For Unite-reanimate
+
+" 保存先のディレクトリ
+let g:reanimate_save_dir = $HOME."/.vim/save_point"
+let g:reanimate_default_save_name = "latest"
+let g:reanimate_sessionoptions="curdir,folds,help,localoptions,slash,tabpages,winsize"
+"let g:reanimate_disables = ["reanimate_session", "reanimate_viminfo"]
+nnoremap <space>ss  :ReanimateSave<Return>
+nnoremap <space>sl  :ReanimateLoad<Return>
 
 "== For Neocomplcache
 "= Need this plugins
@@ -138,11 +146,9 @@ endif
 "let g:EasyMotion_leader_key = '_'
 "nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
 
-"-- move back after visual yank
-vnoremap y y'>
-inoremap jj <Esc>
-
 "== for Fugitive.vim
+"nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
+nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
     execute "bw .git/index"
@@ -150,12 +156,9 @@ function! ToggleGstatus()
     execute "Gstatus"
   endif
 endfunction
-nnoremap <silent> ,gst :<c-u>Gstatus<CR>
-"nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
-nnoremap <silent> <C-@> :call ToggleGstatus()<CR>
 
 "== For toggle case vim
-nnoremap <silent> <C-k> :<C-u>call ToggleCase()<CR>
+nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
 
 "######################
 "#  For Vim settings
@@ -184,21 +187,20 @@ highlight JpSpace cterm=underline ctermfg=7 guifg=7
 autocmd BufRead,BufNew * match JpSpace /　/
 
 "== User function
-function! ToggleGstatus()
-  if bufexists(".git/index")
-    execute "bw .git/index"
-  else
-    execute "Gstatus"
-  endif
+function! FormatCode()
+  execute "%s/  *$//"
 endfunction
 
-"== User keymap
-vnoremap  <silent> <C-p> "0p<CR>
+"== User key mapping
 nmap <Space>b :ls<CR>:buffer<CR>
 nmap <Space>f :edit .<CR>
 nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
 nmap <Space>V :Vexplore!<CR><CR>
-noremap <expr> gm (virtcol('$')/2).'\|'
+nmap <Space>ds :call<Space>FormatCode()<CR>
+inoremap jj <Esc>
+"-- for visual mode paste
+vnoremap <C-p> <Nop>
+vnoremap <C-p> "0p<CR>
 
 "==  Cursor line
 setlocal cursorline
@@ -241,12 +243,9 @@ if has("autocmd")
 endif
 
 "== For Quickfix Controlle
-" Fallback
-nnoremap Q q
-nnoremap q  <Nop>
 " For quickfix list
-nnoremap qj  :cnext<Return>
-nnoremap qk  :cprevious<Return>
+nnoremap <space>j  :cnext<Return>
+nnoremap <space>k  :cprevious<Return>
 
 "== Auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
