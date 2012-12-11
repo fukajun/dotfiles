@@ -16,8 +16,12 @@ Bundle 'gmarik/vundle'
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'Shougo/neosnippet'
+"Bundle 'Shougo/vimshell'
+Bundle 'Shougo/vimproc'
+Bundle 'Shougo/vimfiler'
 Bundle 'sgur/unite-git_grep'
 Bundle 'taka84u9/unite-git'
+Bundle 'Sixeight/unite-grep'
 Bundle 'tpope/vim-surround'
 Bundle 'vim-scripts/grep.vim'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -37,6 +41,7 @@ Bundle 'vim-scripts/mru.vim'
 Bundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
 Bundle 'thinca/vim-quickrun'
+Bundle 'kana/vim-altr'
 "-- For Ruby
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-fugitive'
@@ -61,9 +66,6 @@ Bundle 'tomasr/molokai'
 "Bundle 'winreseizer'
 "Bundle 't9md/vim-foldtext'
 "Bundle 'kien/ctrlp.vim'
-"Bundle 'Shougo/vimshell'
-"Bundle 'Shougo/vimproc'
-"Bundle 'Shougo/vimfiler'
 "Bundle 'scrooloose/nerdtree'
 "Bundle 'project.vim'
 "Bundle 'refe.vim'
@@ -90,7 +92,8 @@ let g:unite_enable_start_insert=1
 " buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 " file list
-nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file<CR>
+"nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -114,7 +117,6 @@ nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
 "== For Unite-reanimate
-
 " 保存先のディレクトリ
 let g:reanimate_save_dir = $HOME."/.vim/save_point"
 let g:reanimate_default_save_name = "latest"
@@ -159,6 +161,18 @@ endfunction
 
 "== For toggle case vim
 nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
+
+"== For vim-alter
+" vim-altr {{{
+nmap <F3> <Plug>(altr-forward)
+nmap <F2> <Plug>(altr-back)
+" For ruby tdd
+call altr#define('%.rb', 'spec/%_spec.rb')
+" For rails tdd
+call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
+call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+
 
 "######################
 "#  For Vim settings
