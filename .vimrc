@@ -117,11 +117,9 @@ nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
 "== For Unite-reanimate
-" 保存先のディレクトリ
 let g:reanimate_save_dir = $HOME."/.vim/save_point"
 let g:reanimate_default_save_name = "latest"
 let g:reanimate_sessionoptions="curdir,folds,help,localoptions,slash,tabpages,winsize"
-"let g:reanimate_disables = ["reanimate_session", "reanimate_viminfo"]
 nnoremap <space>ss  :ReanimateSave<Return>
 nnoremap <space>sl  :ReanimateLoad<Return>
 
@@ -203,6 +201,7 @@ autocmd BufRead,BufNew * match JpSpace /　/
 "== User function
 function! FormatCode()
   execute "%s/  *$//"
+  execute "%s/　/ /g"
 endfunction
 
 "== User key mapping
@@ -210,7 +209,9 @@ nmap <Space>b :ls<CR>:buffer<CR>
 nmap <Space>f :edit .<CR>
 nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
 nmap <Space>V :Vexplore!<CR><CR>
-nmap <Space>ds :call<Space>FormatCode()<CR>
+nmap <Space>ds :<C-u>call<Space>FormatCode()<CR>
+nmap <Space>"" :<C-u>s/"/'/g<CR>
+nmap <Space>dpp :<C-u>s/.tapp//g<CR>
 inoremap jj <Esc>
 "-- for visual mode paste
 vnoremap <C-p> <Nop>
