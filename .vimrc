@@ -172,6 +172,28 @@ call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 
 
+"== For quickrun
+"nnoremap <space>r :RSpecQuickrun<CR>
+nnoremap <space>r :QuickRun <CR>
+"nnoremap <space>r :QuickRun bash -src 'rspec ./spec/controllers/accounts_controller_spec.rb'<CR>
+
+let g:quickrun_config = {}
+let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config['rspec/bundle'] = {
+  \ 'type': 'rspec/bundle',
+  \ 'command': 'rspec',
+  \ 'exec': 'bundle exec %c %s'
+  \}
+let g:quickrun_config['rspec/normal'] = {
+  \ 'type': 'rspec/normal',
+  \ 'command': 'rspec',
+  \ 'exec': '%c %s'
+  \}
+function! RSpecQuickrun()
+    let b:quickrun_config = {'type' : 'rspec/bundle'}
+endfunction
+autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+
 "######################
 "#  For Vim settings
 "######################
