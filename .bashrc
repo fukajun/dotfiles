@@ -10,3 +10,4 @@ alias g="git"
 alias gti='git'
 source ~/.commands
 
+export TERM=xterm-256color
