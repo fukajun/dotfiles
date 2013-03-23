@@ -1,79 +1,64 @@
 "------------------------------------------------------------------------
-"== Bundle Basic Settings
-"=> Install Command
-"=> $ git clone http://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+" Install NeoBundle
+" $ mkdir -p ~/.vim/bundle
+" $ git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
 "------------------------------------------------------------------------
-"##
-"## For Vundle settins
-"##
-"
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-
+set nocompatible
 "== Bundle plugins
-Bundle 'gmarik/vundle'
-Bundle 'Shougo/unite.vim'
-Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
-"Bundle 'Shougo/vimshell'
-Bundle 'Shougo/vimproc'
-Bundle 'Shougo/vimfiler'
-Bundle 'sgur/unite-git_grep'
-Bundle 'taka84u9/unite-git'
-Bundle 'Sixeight/unite-grep'
-Bundle 'tpope/vim-surround'
-Bundle 'vim-scripts/grep.vim'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'vim-scripts/buftabs'
-Bundle 'vim-scripts/yanktmp.vim'
-Bundle 'vim-scripts/SQLUtilities'
-Bundle 'vim-scripts/Align'
-Bundle 'msanders/snipmate.vim'
-Bundle 'lucapette/vim-ruby-doc'
-Bundle 'osyo-manga/vim-reanimate'
-Bundle 'osyo-manga/unite-quickfix'
+if has('vim_starting')
+   set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
+call neobundle#rc(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
+NeoBundle 'Shougo/vimproc'
+"------------------------------------------------------------------------
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Shougo/neocomplcache-rsense'
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'Shougo/vimfiler'
+NeoBundle 'sgur/unite-git_grep'
+NeoBundle 'taka84u9/unite-git'
+NeoBundle 'Sixeight/unite-grep'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'vim-scripts/grep.vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'vim-scripts/buftabs'
+NeoBundle 'vim-scripts/yanktmp.vim'
+NeoBundle 'vim-scripts/SQLUtilities'
+NeoBundle 'vim-scripts/Align'
+NeoBundle 'msanders/snipmate.vim'
+NeoBundle 'lucapette/vim-ruby-doc'
+NeoBundle 'osyo-manga/unite-quickfix'
 "-- Move Cursor plugin
-Bundle 'edsono/vim-matchit'
+NeoBundle 'edsono/vim-matchit'
 "-- File manipiration plugin
-Bundle 'fukajun/nerdtree'
-Bundle 'vim-scripts/mru.vim'
-Bundle 'vim-scripts/spinner.vim'
+NeoBundle 'fukajun/nerdtree'
+NeoBundle 'vim-scripts/mru.vim'
+NeoBundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
-Bundle 'thinca/vim-quickrun'
-Bundle 'kana/vim-altr'
+NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'kana/vim-altr'
 "-- For Ruby
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-rails'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'csexton/rvm.vim'
-Bundle 'ujihisa/rdoc.vim'
+NeoBundle 'tpope/vim-haml'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-rails'
+NeoBundle 'vim-ruby/vim-ruby'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'csexton/rvm.vim'
+NeoBundle 'ujihisa/rdoc.vim'
 "-- Color schemas
-Bundle 'jpo/vim-railscasts-theme'
-Bundle 'flazz/vim-colorschemes'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'ColorSchemeMenuMaker'
-Bundle 'desert-warm-256'
-Bundle 'gmarik/ingretu'
-Bundle 'tomasr/molokai'
-"-- Not use
-"Bundle 'Lokaltog/vim-easymotion'
-"Bundle 'tanabe/ToggleCase-vim'
-"Bundle 'Townk/vim-autoclose'
-"Bundle 'quickhl.vim'
-"Bundle 'winreseizer'
-"Bundle 't9md/vim-foldtext'
-"Bundle 'kien/ctrlp.vim'
-"Bundle 'scrooloose/nerdtree'
-"Bundle 'project.vim'
-"Bundle 'refe.vim'
-"Bundle 'opsplorer'
-"Bundle 'tsukkee/lingr-vim'
-"Bundle 'daisuzu/facebook.vim'
-"Bundle 'mattn/webapi-vim'
-"Bundle 'tyru/open-browser.vim'
+NeoBundle 'jpo/vim-railscasts-theme'
+NeoBundle 'flazz/vim-colorschemes'
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'ColorSchemeMenuMaker'
+NeoBundle 'desert-warm-256'
+NeoBundle 'gmarik/ingretu'
+NeoBundle 'tomasr/molokai'
+
+filetype plugin indent on 
+NeoBundleCheck
 
 "##
 "## For Plugin settings
@@ -104,47 +89,32 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
-"== For ctrlp.vim settings
-"let g:ctrlp_max_height = 20
-"let g:ctrlp_working_path_mode = 'rc'
-"let g:ctrlp_map = '<c-n>'
-"let g:ctrlp_cmd = 'CtrlPMixed'
-"let g:ctrlp_custom_ignore = '\v[\/](\.git|\.hg|\.svn)$'
-"nnoremap <silent> <C-n> :<C-u>CtrlPMRUFiles<CR>
-
 "== For Grep.vim
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 
-"== For Unite-reanimate
-let g:reanimate_save_dir = $HOME."/.vim/save_point"
-let g:reanimate_default_save_name = "latest"
-let g:reanimate_sessionoptions="curdir,folds,help,localoptions,slash,tabpages,winsize"
-nnoremap <space>ss  :ReanimateSave<Return>
-nnoremap <space>sl  :ReanimateLoad<Return>
-
-"== For Neocomplcache
-"= Need this plugins
-"=  'Shougo/neocomplcache'
-"=  'Shougo/neocomplcache-snippets-complete'
-set completeopt=menuone
-let g:neocomplcache_next_keyword_patterns = {}
+"== For Neocomplecache
+" 補完・履歴 neocomplcache "{{{
+set infercase
+" neocomplcache
 let g:neocomplcache_enable_at_startup = 1
-let g:neocomplcache_max_list = 40
-let g:neocomplcache_auto_completion_start_length = 1
-let g:neocomplcache_enable_ignore_case = 0
-let g:neocomplcache_enable_camel_case_completion = 0
-let g:neocomplcache_enable_underbar_completion = 0
-imap <C-k> <Plug>(neocomplcache_snippets_expand)
-smap <C-k> <Plug>(neocomplcache_snippets_expand)
-let g:neocomplcache_snippets_dir = $HOME.'/.vim/snippets'
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-
-"== For EasyEmotion
-"let g:EasyMotion_leader_key = '_'
-"nmap <Leader> H:<C-U>call EasyMotion#F(0, 0)<CR>
+ 
+" default config"{{{
+let g:neocomplcache_force_overwrite_completefunc = 1
+let g:neocomplcache#sources#rsense#home_directory = "$RSENSE_HOME"
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_skip_auto_completion_time = '0.3'
+"}}}
+ 
+" keymap {{{
+imap <expr><C-g>     neocomplcache#undo_completion()
+imap <expr><CR>      neocomplcache#smart_close_popup() . "<CR>" . "<Plug>DiscretionaryEnd"
+imap <silent><expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
+" imap <silent><expr><TAB>   pumvisible() ? "\<C-N>" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_jump_or_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+" }}}
+"}}}
 
 "== for Fugitive.vim
 "nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
@@ -157,11 +127,11 @@ function! ToggleGstatus()
   endif
 endfunction
 
-"== For toggle case vim
+"== For toggle case vim {{{
 nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
+"}}}
 
-"== For vim-alter
-" vim-altr {{{
+"== For vim-alter {{{
 nmap <F3> <Plug>(altr-forward)
 nmap <F2> <Plug>(altr-back)
 " For ruby tdd
@@ -170,12 +140,11 @@ call altr#define('%.rb', 'spec/%_spec.rb')
 call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
 call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+"}}}
 
 
-"== For quickrun
-"nnoremap <space>r :RSpecQuickrun<CR>
+"== For quickrun {{{
 nnoremap <space>r :QuickRun <CR>
-"nnoremap <space>r :QuickRun bash -src 'rspec ./spec/controllers/accounts_controller_spec.rb'<CR>
 
 let g:quickrun_config = {}
 let g:quickrun_config._ = {'runner' : 'vimproc'}
@@ -193,6 +162,7 @@ function! RSpecQuickrun()
     let b:quickrun_config = {'type' : 'rspec/bundle'}
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+"}}}
 
 "######################
 "#  For Vim settings
