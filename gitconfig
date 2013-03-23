@@ -23,7 +23,7 @@
 	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
 	odt-autops = "!$SHELL -c \"git odt-pr; git odt-ps `git cbr`\""
 [user]
-	name = Jun Fukaya
+	name = J.Fukaya
 	email = fukajun.shark@gmail.com
 [color]
 	branch = true
