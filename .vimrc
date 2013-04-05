@@ -13,41 +13,32 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 "------------------------------------------------------------------------
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'taka84u9/unite-git'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'Shougo/vimfiler'
-NeoBundle 'sgur/unite-git_grep'
-NeoBundle 'taka84u9/unite-git'
-NeoBundle 'Sixeight/unite-grep'
+"NeoBundle 'Shougo/neosnippet'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'vim-scripts/grep.vim'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'vim-scripts/buftabs'
-NeoBundle 'vim-scripts/yanktmp.vim'
-NeoBundle 'vim-scripts/SQLUtilities'
 NeoBundle 'vim-scripts/Align'
-NeoBundle 'msanders/snipmate.vim'
-NeoBundle 'lucapette/vim-ruby-doc'
-NeoBundle 'osyo-manga/unite-quickfix'
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
 "-- File manipiration plugin
 NeoBundle 'fukajun/nerdtree'
-NeoBundle 'vim-scripts/mru.vim'
-NeoBundle 'vim-scripts/spinner.vim'
+NeoBundle 'tpope/vim-fugitive'
+"NeoBundle 'vim-scripts/mru.vim'
+"NeoBundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'kana/vim-altr'
 "-- For Ruby
+NeoBundle "skwp/vim-rspec.git"
 NeoBundle 'tpope/vim-haml'
-NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'csexton/rvm.vim'
 NeoBundle 'ujihisa/rdoc.vim'
+NeoBundle 'hallison/vim-markdown'
 "-- Color schemas
 NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'flazz/vim-colorschemes'
@@ -57,7 +48,7 @@ NeoBundle 'desert-warm-256'
 NeoBundle 'gmarik/ingretu'
 NeoBundle 'tomasr/molokai'
 
-filetype plugin indent on 
+filetype plugin indent on
 NeoBundleCheck
 
 "##
@@ -98,26 +89,38 @@ nnoremap <silent> <F4> :Rgrep<CR>
 set infercase
 " neocomplcache
 let g:neocomplcache_enable_at_startup = 1
- 
+let g:neocomplcache_max_list = 40
+let g:neocomplcache_auto_completion_start_length = 1
+let g:neocomplcache_enable_ignore_case = 0
+let g:neocomplcache_enable_camel_case_completion = 0
+let g:neocomplcache_enable_underbar_completion = 0
+
 " default config"{{{
 let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache#sources#rsense#home_directory = "$RSENSE_HOME"
+let g:neocomplcache#sources#rsense#home_directory = '/Users/fukajun/lib/rsense-0.3'
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_skip_auto_completion_time = '0.3'
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 "}}}
- 
+
 " keymap {{{
-imap <expr><C-g>     neocomplcache#undo_completion()
-imap <expr><CR>      neocomplcache#smart_close_popup() . "<CR>" . "<Plug>DiscretionaryEnd"
-imap <silent><expr><S-TAB> pumvisible() ? "\<C-P>" : "\<S-TAB>"
-" imap <silent><expr><TAB>   pumvisible() ? "\<C-N>" : "\<TAB>"
-imap <expr><TAB> neosnippet#expandable() ? "\<Plug>(neosnippet_jump_or_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " }}}
 "}}}
 
 "== for Fugitive.vim
-"nnoremap <silent> <C-@> :<c-u>Gstatus<CR>
 nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
@@ -143,25 +146,75 @@ call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 "}}}
 
 
-"== For quickrun {{{
+"== For quieck run {{{
 nnoremap <space>r :QuickRun <CR>
-
 let g:quickrun_config = {}
-let g:quickrun_config._ = {'runner' : 'vimproc'}
-let g:quickrun_config['rspec/bundle'] = {
-  \ 'type': 'rspec/bundle',
-  \ 'command': 'rspec',
-  \ 'exec': 'bundle exec %c %s'
-  \}
-let g:quickrun_config['rspec/normal'] = {
-  \ 'type': 'rspec/normal',
-  \ 'command': 'rspec',
-  \ 'exec': '%c %s'
-  \}
-function! RSpecQuickrun()
-    let b:quickrun_config = {'type' : 'rspec/bundle'}
+
+augroup QrunRSpec
+  autocmd!
+  autocmd BufWinEnter,BufNewFile *_spec.rb set filetype=ruby.rspec
+augroup END 
+
+let rspec_outputter = quickrun#outputter#buffer#new()
+function! rspec_outputter.init(session)
+  call(quickrun#outputter#buffer#new().init,  [a:session],  self)
 endfunction
-autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+
+function! rspec_outputter.finish(session)
+  highlight default RSpecGreen ctermfg = Green cterm = none
+  highlight default RSpecRed    ctermfg = Red   cterm = none
+  highlight default RSpecComment ctermfg = Cyan  cterm = none
+  highlight default RSpecNormal  ctermfg = White cterm = none
+  call matchadd("RSpecGreen", "^[\.F]*\.[\.F]*$")
+  call matchadd("RSpecGreen", "^.*, 0 failures$")
+  call matchadd("RSpecRed", "F")
+  call matchadd("RSpecRed", "^.*, [1-9]* failures.*$")
+  call matchadd("RSpecRed", "^.*, 1 failure.*$")
+  call matchadd("RSpecRed", "^ *(.*$")
+  call matchadd("RSpecRed", "^ *expected.*$")
+  call matchadd("RSpecRed", "^ *got.*$")
+  call matchadd("RSpecRed", "^ *Failure/Error:.*$")
+  call matchadd("RSpecRed", "^.*(FAILED - [0-9]*)$")
+  call matchadd("RSpecRed", "^rspec .*:.*$")
+  call matchadd("RSpecComment", " # .*$")
+  call matchadd("RSpecNormal", "^Failures:")
+  call matchadd("RSpecNormal", "^Finished")
+  call matchadd("RSpecNormal", "^Failed")
+
+  call call(quickrun#outputter#buffer#new().finish,  [a:session], self)
+endfunction
+
+call quickrun#register_outputter("rspec_outputter", rspec_outputter)
+let g:quickrun_config['ruby.rspec'] = { 
+      \ 'command': 'rspec',
+      \ 'outputter': 'rspec_outputter',
+      \ }
+"}}}
+
+"== For quickrun {{{
+"nnoremap <space>r :QuickRun <CR>
+"
+"let g:quickrun_config = {}
+"let g:quickrun_config._ = {'runner' : 'vimproc'}
+"let g:quickrun_config['rspec/bundle'] = {
+"  \ 'type': 'rspec/bundle',
+"  \ 'command': 'rspec',
+"  \ 'exec': 'bundle exec %c %s'
+"  \}
+"let g:quickrun_config['rspec/normal'] = {
+"  \ 'type': 'rspec/normal',
+"  \ 'command': 'rspec',
+"  \ 'exec': '%c %s'
+"  \}
+"function! RSpecQuickrun()
+"    let b:quickrun_config = {'type' : 'rspec/bundle'}
+"endfunction
+"autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+"}}}
+
+"== For quickrun {{{
+nnoremap <silent> <space>rs :RunSpec<CR>
+nnoremap <silent> <space>rl :RunSpecLine<CR>
 "}}}
 
 "######################
@@ -175,7 +228,6 @@ set shiftwidth=2
 set expandtab
 set number
 set nohlsearch
-set clipboard=unnamed
 set directory=~/.vim/tmp
 set hidden
 set autoindent
@@ -188,12 +240,12 @@ set lcs=tab:>.,trail:_,extends:\
 set list
 highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
-autocmd BufRead,BufNew * match JpSpace /　/
+autocmd BufRead,BufNew * match JpSpace / /
 
 "== User function
 function! FormatCode()
   execute "%s/  *$//"
-  execute "%s/　/ /g"
+  execute "%s/ / /g"
 endfunction
 
 "== User key mapping
@@ -266,25 +318,10 @@ let g:indent_guides_enable_on_vim_startup = 1
 "== Color schema
 colorscheme wombat256mod
 "colorscheme molokai
-"colorscheme railscasts
-"colorscheme ingretu
-"colorscheme desert-warm-256
-"colorscheme solarized
-"--- Solarized Setting
-"set background=dark
-"let g:solarized_termcolors=256
-"--- not like
-"colorscheme desert
-"colorscheme peachpuff
-"colorscheme morning
-"colorscheme evening
-"colorscheme elflord
-"colorscheme pablo
-"colorscheme blue
-"colorscheme darkblue
 
 "==  Matchpare Color
 hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
 
 "== Custome Mapping
 command! VimrcReload :source ~/.vimrc
+
