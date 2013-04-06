@@ -29,6 +29,7 @@ NeoBundle 'tpope/vim-fugitive'
 "NeoBundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
 NeoBundle 'thinca/vim-quickrun'
+NeoBundle 'vim-scripts/AnsiEsc.vim'
 NeoBundle 'kana/vim-altr'
 "-- For Ruby
 NeoBundle "skwp/vim-rspec.git"
@@ -50,6 +51,18 @@ NeoBundle 'tomasr/molokai'
 
 filetype plugin indent on
 NeoBundleCheck
+
+"##
+"## Vim initialize
+"##
+augroup MyAutocmd
+  autocmd!
+augroup END
+
+command!
+  \ -bang -nargs=*
+  \ MyAutocmd
+  \ autocmd<bang> vimrc <args>
 
 "##
 "## For Plugin settings
@@ -145,26 +158,59 @@ call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 "}}}
 
+"{{{
+function! HighlightConsoleCodes()
+  0
+  let register_save = @"
+  while search('\[[0-9;]*m', 'c')
+    normal! dfm
 
-"== For quieck run {{{
-nnoremap <space>r :QuickRun <CR>
-let g:quickrun_config = {}
+    let [lnum, col] = getpos('.')[1:2]
+    if len(getline('.')) == col
+      let col += 1
+    endif
+    let syntax_name = 'ConsoleCodeAt_' . bufnr('%') . '_' . lnum . '_' . col
+    execute 'syntax region' syntax_name 'start=+\%' . lnum . 'l\%' . col . 'c+ end=+\%$+' 'contains=ALL'
 
-augroup QrunRSpec
-  autocmd!
-  autocmd BufWinEnter,BufNewFile *_spec.rb set filetype=ruby.rspec
-augroup END 
+    let highlight = ''
+    for color_code in split(matchstr(@", '[0-9;]\+'), ';')
+      if color_code == 0
+        let highlight .= ' ctermfg=NONE ctermbg=NONE'
+      elseif color_code == 1
+        let highlight .= ' cterm=bold'
+      elseif 30 <= color_code && color_code <= 37
+        let highlight .= ' ctermfg=' . (color_code - 30)
+      elseif color_code == 38
+        " TODO
+      elseif color_code == 39
+        " TODO
+      elseif 40 <= color_code && color_code <= 47
+        let highlight .= ' ctermbg=' . (color_code - 40)
+      elseif color_code == 49
+        " TODO
+      endif
+    endfor
+    if len(highlight)
+      execute 'highlight' syntax_name highlight
+    endif
+  endwhile
+  let @" = register_save
+  0
+endfunction
+autocmd BufRead,StdinReadPost * if search('[\d*m', 'n') | call HighlightConsoleCodes() | set buftype=nofile nomodifiable | endif
+"}}}
 
+"{{{
 let rspec_outputter = quickrun#outputter#buffer#new()
 function! rspec_outputter.init(session)
-  call(quickrun#outputter#buffer#new().init,  [a:session],  self)
+  call call(quickrun#outputter#buffer#new().init,  [a:session],  self)
 endfunction
 
 function! rspec_outputter.finish(session)
-  highlight default RSpecGreen ctermfg = Green cterm = none
-  highlight default RSpecRed    ctermfg = Red   cterm = none
-  highlight default RSpecComment ctermfg = Cyan  cterm = none
-  highlight default RSpecNormal  ctermfg = White cterm = none
+  highlight RSpecGreen ctermfg = Green cterm = none
+  highlight RSpecRed    ctermfg = Red   cterm = none
+  highlight RSpecComment ctermfg = Cyan  cterm = none
+  highlight RSpecNormal  ctermfg = White cterm = none
   call matchadd("RSpecGreen", "^[\.F]*\.[\.F]*$")
   call matchadd("RSpecGreen", "^.*, 0 failures$")
   call matchadd("RSpecRed", "F")
@@ -180,41 +226,43 @@ function! rspec_outputter.finish(session)
   call matchadd("RSpecNormal", "^Failures:")
   call matchadd("RSpecNormal", "^Finished")
   call matchadd("RSpecNormal", "^Failed")
-
-  call call(quickrun#outputter#buffer#new().finish,  [a:session], self)
+  call call(quickrun#outputter#buffer#new().finish, [a:session], self)
 endfunction
-
 call quickrun#register_outputter("rspec_outputter", rspec_outputter)
-let g:quickrun_config['ruby.rspec'] = { 
-      \ 'command': 'rspec',
-      \ 'outputter': 'rspec_outputter',
-      \ }
 "}}}
 
-"== For quickrun {{{
-"nnoremap <space>r :QuickRun <CR>
-"
-"let g:quickrun_config = {}
-"let g:quickrun_config._ = {'runner' : 'vimproc'}
-"let g:quickrun_config['rspec/bundle'] = {
-"  \ 'type': 'rspec/bundle',
-"  \ 'command': 'rspec',
-"  \ 'exec': 'bundle exec %c %s'
-"  \}
-"let g:quickrun_config['rspec/normal'] = {
-"  \ 'type': 'rspec/normal',
-"  \ 'command': 'rspec',
-"  \ 'exec': '%c %s'
-"  \}
-"function! RSpecQuickrun()
-"    let b:quickrun_config = {'type' : 'rspec/bundle'}
-"endfunction
-"autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+"{{{
+" quickrun
+autocmd FileType quickrun AnsiEsc
 "}}}
 
-"== For quickrun {{{
-nnoremap <silent> <space>rs :RunSpec<CR>
-nnoremap <silent> <space>rl :RunSpecLine<CR>
+
+"== For quieck run {{{
+nnoremap <space>r :QuickRun <CR>
+"nnoremap <space>r :QuickRun >> buffer -mode v<CR>
+
+let g:quickrun_config = {}
+let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config['rspec/bundle'] = {
+  \ 'type': 'rspec/bundle',
+  \ 'command': 'rspec',
+  \ 'outputter': 'buffer',
+  \ 'exec': 'bundle exec %c %o --drb --tty --color %s'
+  \}
+
+function! RSpecQuickrun()
+  let b:quickrun_config = {'type' : 'rspec/bundle'}
+  nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
+endfunction
+autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+
+"}}}
+
+
+"== For vim-rspec {{{
+let g:RspecSplitHorizontal=10
+"nnoremap <silent> <space>ra :RunSpec<CR>
+"nnoremap <silent> <space>r :RunSpecLine<CR>
 "}}}
 
 "######################
@@ -233,6 +281,7 @@ set hidden
 set autoindent
 set ignorecase
 set incsearch
+set virtualedit=block
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
 "==  Display tab multibyte space
