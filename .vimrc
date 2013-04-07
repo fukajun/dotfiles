@@ -72,11 +72,14 @@ command!
 syntax enable
 filetype plugin indent on
 
-"== For NERDTree
+
+"== For NERDTree {{{
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
 autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
+}}}
 
-"== For Unite.vim
+
+"== For Unite.vim {{{
 let g:unite_enable_start_insert=1
 " buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
@@ -92,13 +95,16 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+"}}}
 
-"== For Grep.vim
+"== For Grep.vim {{{
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
+"}}}
 
-"== For Neocomplecache
-" 補完・履歴 neocomplcache "{{{
+
+"== For Neocomplecache {{{
+" 補完・履歴 neocomplcache
 set infercase
 " neocomplcache
 let g:neocomplcache_enable_at_startup = 1
@@ -133,6 +139,7 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " }}}
 "}}}
 
+
 "== for Fugitive.vim
 nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
 function! ToggleGstatus()
@@ -147,6 +154,7 @@ endfunction
 nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
 "}}}
 
+
 "== For vim-alter {{{
 nmap <F3> <Plug>(altr-forward)
 nmap <F2> <Plug>(altr-back)
@@ -158,81 +166,8 @@ call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 "}}}
 
-"{{{
-function! HighlightConsoleCodes()
-  0
-  let register_save = @"
-  while search('\[[0-9;]*m', 'c')
-    normal! dfm
 
-    let [lnum, col] = getpos('.')[1:2]
-    if len(getline('.')) == col
-      let col += 1
-    endif
-    let syntax_name = 'ConsoleCodeAt_' . bufnr('%') . '_' . lnum . '_' . col
-    execute 'syntax region' syntax_name 'start=+\%' . lnum . 'l\%' . col . 'c+ end=+\%$+' 'contains=ALL'
-
-    let highlight = ''
-    for color_code in split(matchstr(@", '[0-9;]\+'), ';')
-      if color_code == 0
-        let highlight .= ' ctermfg=NONE ctermbg=NONE'
-      elseif color_code == 1
-        let highlight .= ' cterm=bold'
-      elseif 30 <= color_code && color_code <= 37
-        let highlight .= ' ctermfg=' . (color_code - 30)
-      elseif color_code == 38
-        " TODO
-      elseif color_code == 39
-        " TODO
-      elseif 40 <= color_code && color_code <= 47
-        let highlight .= ' ctermbg=' . (color_code - 40)
-      elseif color_code == 49
-        " TODO
-      endif
-    endfor
-    if len(highlight)
-      execute 'highlight' syntax_name highlight
-    endif
-  endwhile
-  let @" = register_save
-  0
-endfunction
-autocmd BufRead,StdinReadPost * if search('[\d*m', 'n') | call HighlightConsoleCodes() | set buftype=nofile nomodifiable | endif
-"}}}
-
-"{{{
-let rspec_outputter = quickrun#outputter#buffer#new()
-function! rspec_outputter.init(session)
-  call call(quickrun#outputter#buffer#new().init,  [a:session],  self)
-endfunction
-
-function! rspec_outputter.finish(session)
-  highlight RSpecGreen ctermfg = Green cterm = none
-  highlight RSpecRed    ctermfg = Red   cterm = none
-  highlight RSpecComment ctermfg = Cyan  cterm = none
-  highlight RSpecNormal  ctermfg = White cterm = none
-  call matchadd("RSpecGreen", "^[\.F]*\.[\.F]*$")
-  call matchadd("RSpecGreen", "^.*, 0 failures$")
-  call matchadd("RSpecRed", "F")
-  call matchadd("RSpecRed", "^.*, [1-9]* failures.*$")
-  call matchadd("RSpecRed", "^.*, 1 failure.*$")
-  call matchadd("RSpecRed", "^ *(.*$")
-  call matchadd("RSpecRed", "^ *expected.*$")
-  call matchadd("RSpecRed", "^ *got.*$")
-  call matchadd("RSpecRed", "^ *Failure/Error:.*$")
-  call matchadd("RSpecRed", "^.*(FAILED - [0-9]*)$")
-  call matchadd("RSpecRed", "^rspec .*:.*$")
-  call matchadd("RSpecComment", " # .*$")
-  call matchadd("RSpecNormal", "^Failures:")
-  call matchadd("RSpecNormal", "^Finished")
-  call matchadd("RSpecNormal", "^Failed")
-  call call(quickrun#outputter#buffer#new().finish, [a:session], self)
-endfunction
-call quickrun#register_outputter("rspec_outputter", rspec_outputter)
-"}}}
-
-"{{{
-" quickrun
+"== For AnsiEsc {{{
 autocmd FileType quickrun AnsiEsc
 "}}}
 
@@ -255,7 +190,6 @@ function! RSpecQuickrun()
   nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
-
 "}}}
 
 
@@ -265,9 +199,11 @@ let g:RspecSplitHorizontal=10
 "nnoremap <silent> <space>r :RunSpecLine<CR>
 "}}}
 
+
 "######################
 "#  For Vim settings
 "######################
+
 
 "==  Vim Editor Setting
 set visualbell
@@ -284,6 +220,7 @@ set incsearch
 set virtualedit=block
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
+
 "==  Display tab multibyte space
 set lcs=tab:>.,trail:_,extends:\
 set list
@@ -291,11 +228,13 @@ highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
 autocmd BufRead,BufNew * match JpSpace / /
 
+
 "== User function
 function! FormatCode()
   execute "%s/  *$//"
   execute "%s/ / /g"
 endfunction
+
 
 "== User key mapping
 nmap <Space>b :ls<CR>:buffer<CR>
@@ -310,8 +249,10 @@ inoremap jj <Esc>
 vnoremap <C-p> <Nop>
 vnoremap <C-p> "0p<CR>
 
+
 "==  Cursor line
 setlocal cursorline
+
 
 "==  Status line
 " ステータスラインの表示
@@ -342,6 +283,7 @@ endif
   set statusline+=\ \   " 空白スペース2個
   set statusline+=%P    " ファイル内の何％の位置にあるか
 
+
 "== Remember last open curor position
 if has("autocmd")
   autocmd BufReadPost *
@@ -350,13 +292,16 @@ if has("autocmd")
     \ endif
 endif
 
+
 "== For Quickfix Controlle
 " For quickfix list
 nnoremap <space>j  :cnext<Return>
 nnoremap <space>k  :cprevious<Return>
 
+
 "== Auto adding quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
+
 
 "== IndentGuide Setting
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
@@ -364,12 +309,15 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 
+
 "== Color schema
 colorscheme wombat256mod
 "colorscheme molokai
 
+
 "==  Matchpare Color
 hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
+
 
 "== Custome Mapping
 command! VimrcReload :source ~/.vimrc
