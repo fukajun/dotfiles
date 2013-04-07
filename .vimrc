@@ -76,7 +76,7 @@ filetype plugin indent on
 "== For NERDTree {{{
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
 autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
-}}}
+"}}}
 
 
 "== For Unite.vim {{{
@@ -182,7 +182,7 @@ let g:quickrun_config['rspec/bundle'] = {
   \ 'type': 'rspec/bundle',
   \ 'command': 'rspec',
   \ 'outputter': 'buffer',
-  \ 'exec': 'bundle exec %c %o --drb --tty --color %s'
+  \ 'exec': 'bundle exec %c %o --drb --tty --format d --color %s'
   \}
 
 function! RSpecQuickrun()
