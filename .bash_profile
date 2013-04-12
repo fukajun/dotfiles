@@ -7,4 +7,4 @@ export TERM=xterm-256color
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
  . $(brew --prefix)/etc/bash_completion
 fi
-export RSENSE_HOME=$HOME/lib/rsense-3.0
+export RSENSE_HOME=$HOME/lib/rsense-0.3
