@@ -14,12 +14,15 @@ NeoBundle 'Shougo/vimproc'
 "------------------------------------------------------------------------
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'taka84u9/unite-git'
+NeoBundle 'basyura/unite-rails'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
 "NeoBundle 'Shougo/neosnippet'
+NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-NeoBundle 'vim-scripts/Align'
+"NeoBundle 'vim-scripts/Align'
+NeoBundle 'godlygeek/tabular'
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
 "-- File manipiration plugin
@@ -81,11 +84,20 @@ autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") 
 
 "== For Unite.vim {{{
 let g:unite_enable_start_insert=1
-" buffers
+" ====Buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
-" file list
+
+" ====File list
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
-nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
+"nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
+" MRU優先
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files file_mru git_modified git_untracked git_cached buffer bookmark file <CR>
+" ===== Rails
+noremap :rc :<C-u>Unite rails/controller<CR>
+noremap :rm :<C-u>Unite rails/model<CR>
+noremap :rv :<C-u>Unite rails/view<CR>
+
+" ====Keymap when Open
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -95,7 +107,11 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+
+call unite#custom_max_candidates('file_mru', 10)
+call unite#custom_max_candidates('git_cached ', 10000)
 "}}}
+"
 
 "== For Grep.vim {{{
 nnoremap <silent> <F3> :Grep<CR>
@@ -139,6 +155,16 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " }}}
 "}}}
 
+"== For Tabular.vim
+" =
+nmap <space># :Tabularize /#<CR>
+vmap <space># :Tabularize /#<CR>
+" =
+nmap <space>= :Tabularize /=<CR>
+vmap <space>= :Tabularize /=<CR>
+" |
+nmap <space>a :Tabularize /\|<CR>
+vmap <space>a :Tabularize /\|<CR>
 
 "== for Fugitive.vim
 nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
