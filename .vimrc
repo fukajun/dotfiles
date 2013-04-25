@@ -259,7 +259,7 @@ function! RSpecQuickrun()
   end
   nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
 endfunction
-autocmd BufReadPost *.feature call RSpecQuickrun()
+autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
 function! CucumberQuickrun()
   if exists('g:use_zeus_cucumber')
@@ -275,7 +275,7 @@ function! SetUseZeus()
   let g:use_zeus_rspec = 1
   let g:use_zeus_cucumber = 1
 endfunction
-call SetUseZeus()
+"call SetUseZeus()
 
 command! -nargs=0 UseZeus call SetUseZeus()
 "}}}
