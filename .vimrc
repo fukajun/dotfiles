@@ -1,3 +1,15 @@
+"------- memo -------
+" zi  折り畳みの有効無効の切り替え
+" zf  折り畳みを作成する
+" za  折り畳みの開け閉め
+" zd  折り畳みを削除する
+
+" 時々使うコマンド
+" zA  折り畳みの開け閉め（再帰）
+" zD  折り畳みを削除する（再帰）
+" zE  全ての折り畳みを削除
+" zR  全ての折り畳みを開く
+" zM  全ての折り畳みを閉じる
 "------------------------------------------------------------------------
 " Install NeoBundle
 " $ mkdir -p ~/.vim/bundle
@@ -21,15 +33,12 @@ NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
-"NeoBundle 'vim-scripts/Align'
 NeoBundle 'godlygeek/tabular'
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
 "-- File manipiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
-"NeoBundle 'vim-scripts/mru.vim'
-"NeoBundle 'vim-scripts/spinner.vim'
 "-- Execute command in vim
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-scripts/AnsiEsc.vim'
@@ -91,11 +100,19 @@ nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
 " MRU優先
-nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files file_mru git_modified git_untracked git_cached buffer bookmark file <CR>
-" ===== Rails
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
+" ===== Unite-rails
 noremap :rc :<C-u>Unite rails/controller<CR>
 noremap :rm :<C-u>Unite rails/model<CR>
 noremap :rv :<C-u>Unite rails/view<CR>
+noremap :rg :<C-u>Unite rails/bundled_gem<CR>
+
+" ===== Unite-grep
+noremap <space>g :<C-u>Unite grep<CR>
+let g:unite_source_grep_command = 'ag'
+let g:unite_source_grep_default_opts = ' --nocolor --nogroup --ignore=''log'' -U '
+let g:unite_source_grep_recursive_opt = ''
+let g:unite_source_grep_max_candidates = 1200
 
 " ====Keymap when Open
 " ウィンドウを分割して開く
