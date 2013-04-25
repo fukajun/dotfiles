@@ -221,18 +221,63 @@ nnoremap <space>r :QuickRun <CR>
 
 let g:quickrun_config = {}
 let g:quickrun_config._ = {'runner' : 'vimproc'}
+
+" For rspec
 let g:quickrun_config['rspec/bundle'] = {
   \ 'type': 'rspec/bundle',
   \ 'command': 'rspec',
   \ 'outputter': 'buffer',
   \ 'exec': 'bundle exec %c %o --drb --tty --format d --color %s'
   \}
+let g:quickrun_config['rspec/zeus'] = {
+  \ 'type': 'rspec/bundle',
+  \ 'command': 'zeus',
+  \ 'outputter': 'buffer',
+  \ 'exec': 'bundle exec %c rspec %o --tty --format d --color %s'
+  \}
 
+" For Cucumber
+let g:quickrun_config['cucumber/bundle'] = {
+  \ 'type': 'cucumber/bundle',
+  \ 'command': 'cucumber',
+  \ 'outputter': 'buffer',
+  \ 'exec': 'bundle exec %c %o --color --drb %s'
+  \}
+let g:quickrun_config['cucumber/zeus'] = {
+  \ 'type': 'cucumber/zeus',
+  \ 'command': 'cucumber',
+  \ 'outputter': 'buffer',
+  \ 'exec': 'bundle exec zeus cucumber %o --color %s'
+  \}
+
+" Referenced @joker1007
 function! RSpecQuickrun()
-  let b:quickrun_config = {'type' : 'rspec/bundle'}
+  if exists('g:use_zeus_rspec')
+    let b:quickrun_config = {'type' : 'rspec/zeus'}
+  else
+    let b:quickrun_config = {'type' : 'rspec/bundle'}
+  end
   nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
 endfunction
-autocmd BufReadPost *_spec.rb call RSpecQuickrun()
+autocmd BufReadPost *.feature call RSpecQuickrun()
+
+function! CucumberQuickrun()
+  if exists('g:use_zeus_cucumber')
+    let b:quickrun_config = {'type' : 'cucumber/zeus'}
+  else
+    let b:quickrun_config = {'type' : 'cucumber/bundle'}
+  end
+  nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
+endfunction
+autocmd BufReadPost *.feature call CucumberQuickrun()
+
+function! SetUseZeus()
+  let g:use_zeus_rspec = 1
+  let g:use_zeus_cucumber = 1
+endfunction
+call SetUseZeus()
+
+command! -nargs=0 UseZeus call SetUseZeus()
 "}}}
 
 
