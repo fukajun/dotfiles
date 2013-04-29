@@ -152,7 +152,7 @@ let g:neocomplcache_force_overwrite_completefunc = 1
 let g:neocomplcache#sources#rsense#home_directory = '/Users/fukajun/lib/rsense-0.3'
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
-let g:neocomplcache_skip_auto_completion_time = '0.3'
+let g:neocomplcache_skip_auto_completion_time = '0.5'
 if !exists('g:neocomplcache_omni_patterns')
   let g:neocomplcache_omni_patterns = {}
 endif
@@ -399,7 +399,8 @@ let g:indent_guides_enable_on_vim_startup = 1
 
 
 "== Color schema
-colorscheme wombat256mod
+"colorscheme wombat256mod
+colorscheme railscasts
 "colorscheme molokai
 
 
