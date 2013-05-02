@@ -230,10 +230,10 @@ let g:quickrun_config['rspec/bundle'] = {
   \ 'exec': 'bundle exec %c %o --drb --tty --format d --color %s'
   \}
 let g:quickrun_config['rspec/zeus'] = {
-  \ 'type': 'rspec/bundle',
+  \ 'type': 'rspec/zeus',
   \ 'command': 'zeus',
   \ 'outputter': 'buffer',
-  \ 'exec': 'bundle exec %c rspec %o --tty --format d --color %s'
+  \ 'exec': 'pwd;%c rspec %o --tty --format d --color %s'
   \}
 
 " For Cucumber
@@ -286,6 +286,11 @@ let g:RspecSplitHorizontal=10
 "nnoremap <silent> <space>ra :RunSpec<CR>
 "nnoremap <silent> <space>r :RunSpecLine<CR>
 "}}}
+
+
+"== For dispatch-vim
+noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
+
 
 
 "######################
