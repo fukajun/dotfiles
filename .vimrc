@@ -27,13 +27,18 @@ NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'basyura/unite-rails'
+NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
-"NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'godlygeek/tabular'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'ujihisa/unite-colorscheme'
+NeoBundle 'h1mesuke/unite-outline'
+
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
 "-- File manipiration plugin
@@ -108,11 +113,17 @@ noremap :rv :<C-u>Unite rails/view<CR>
 noremap :rg :<C-u>Unite rails/bundled_gem<CR>
 
 " ===== Unite-grep
-noremap <space>g :<C-u>Unite grep<CR>
+function UniteGrepGitRepo()
+  let git_home = system('git rev-parse --show-toplevel')[0:-2]
+  let cmd = "Unite grep:" . git_home . "::"
+  execute cmd
+endfunction
+nnoremap <C-k>j :call UniteGrepGitRepo()<CR>
+nnoremap <C-k>g :<C-u>Unite grep<CR>
 let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = ' --nocolor --nogroup --ignore=''log'' -U '
+let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -U '
 let g:unite_source_grep_recursive_opt = ''
-let g:unite_source_grep_max_candidates = 1200
+let g:unite_source_grep_max_candidates = 100
 
 " ====Keymap when Open
 " ウィンドウを分割して開く
@@ -125,8 +136,8 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
-call unite#custom_max_candidates('file_mru', 10)
-call unite#custom_max_candidates('git_cached ', 10000)
+call unite#custom_source('file_mru',    'max_candidates', 10)
+call unite#custom_source('git_cached ', 'max_candidates', 10000)
 "}}}
 "
 
@@ -199,12 +210,15 @@ nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
 
 
 "== For vim-alter {{{
-nmap <F3> <Plug>(altr-forward)
-nmap <F2> <Plug>(altr-back)
+"nmap <F3> <Plug>(altr-forward)
+"nmap <F2> <Plug>(altr-back)
+"nmap <C-l> <Plug>(altr-forward)
+nmap <C-h> <Plug>(altr-back)
 " For ruby tdd
 call altr#define('%.rb', 'spec/%_spec.rb')
 " For rails tdd
-call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+"call altr#define('app/models/%.rb', 'spec/models/%_spec.rb', 'spec/factories/%s.rb')
+call altr#define('app/models/%.rb', 'spec/models/%_spec.rb')
 call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 "}}}
@@ -220,7 +234,10 @@ nnoremap <space>r :QuickRun <CR>
 "nnoremap <space>r :QuickRun >> buffer -mode v<CR>
 
 let g:quickrun_config = {}
-let g:quickrun_config._ = {'runner' : 'vimproc'}
+let g:quickrun_config._ = {
+  \ 'runner' : 'vimproc',
+  \ 'runner/vimproc/updatetime' : 250
+  \ }
 
 " For rspec
 let g:quickrun_config['rspec/bundle'] = {
@@ -287,6 +304,13 @@ let g:RspecSplitHorizontal=10
 "nnoremap <silent> <space>r :RunSpecLine<CR>
 "}}}
 
+"== For dash
+function! s:dash(...)
+  let word = len(a:000) == 0 ? input('Dash search: ') : a:1
+  call system(printf("open dash://'%s'", word))
+endfunction
+command! -nargs=? Dash call <SID>dash(<f-args>)
+nnoremap <silent> <C-K><C-K> :<C-u>Dash <C-R><C-W><CR>
 
 "== For dispatch-vim
 noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
