@@ -15,4 +15,5 @@ ln -nsf $HOME/dotfiles/.screenrc     $HOME/.screenrc
 ln -nsf $HOME/dotfiles/.tmux.conf    $HOME/.tmux.conf
 ln -nsf $HOME/dotfiles/.vimrc        $HOME/.vimrc
 ln -nsf $HOME/dotfiles/gitconfig     $HOME/.gitconfig
+ln -nsf $HOME/dotfiles/_vim/snippets/ruby.snip $HOME/.vim/snippets/ruby.snip
 ```

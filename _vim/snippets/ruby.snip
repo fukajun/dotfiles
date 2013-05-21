@@ -12,23 +12,23 @@ abbr before(:each) do
 
 snippet it
 abbr it do
-    it "${1}" do
+    it '${1}' do
       ${2}
     end
 
 snippet context
 abbr context do
-    context "${1}" do
-      it "${2}" do
+    context '${1}' do
+      it '${2}' do
         ${3}
       end
     end
 
 snippet describe 
 abbr describe do
-    describe "${1}" do
-      context "${2}" do
-        it "${3}" do
+    describe '${1}' do
+      context '${2}' do
+        it '${3}' do
           ${4}
         end
       end
