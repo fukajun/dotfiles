@@ -32,3 +32,5 @@
 	ui = auto
 [core]
 	editor = vim
+[rebase]
+	autosquash = true
