@@ -28,6 +28,8 @@ NeoBundle 'Shougo/unite.vim'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'basyura/unite-rails'
 NeoBundle 'sgur/unite-git_grep'
+NeoBundle 'ujihisa/unite-colorscheme'
+NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
@@ -36,8 +38,8 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'mattn/gist-vim'
+NeoBundle 'mattn/webapi-vim'
 
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
@@ -81,13 +83,16 @@ command!
   \ MyAutocmd
   \ autocmd<bang> vimrc <args>
 
+let mapleader = " "
+
 "##
 "## For Plugin settings
 "##
-"
-"== For CoffeeScript
+
+"== For CoffeeScript {{{
 syntax enable
 filetype plugin indent on
+"}}}
 
 
 "== For NERDTree {{{
@@ -98,34 +103,56 @@ autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") 
 
 "== For Unite.vim {{{
 let g:unite_enable_start_insert=1
-" ====Buffers
+" ==== Command
+noremap <silent> <C-w> :<C-u>Unite command mapping<CR>
+" ==== Buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
-
-" ====File list
+" ==== Outline
+nnoremap <silent> <C-l> :<C-u>Unite outline<CR>
+" ==== File list
+nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
-" MRU優先
-nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 " ===== Unite-rails
 noremap :rc :<C-u>Unite rails/controller<CR>
 noremap :rm :<C-u>Unite rails/model<CR>
 noremap :rv :<C-u>Unite rails/view<CR>
 noremap :rg :<C-u>Unite rails/bundled_gem<CR>
-
 " ===== Unite-grep
 function UniteGrepGitRepo()
   let git_home = system('git rev-parse --show-toplevel')[0:-2]
   let cmd = "Unite grep:" . git_home . "::"
   execute cmd
 endfunction
-nnoremap <C-k>j :call UniteGrepGitRepo()<CR>
-nnoremap <C-k>g :<C-u>Unite grep<CR>
+nnoremap <leader>j :call UniteGrepGitRepo()<CR>
+nnoremap <leader>g :<C-u>Unite grep<CR>
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -U '
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
+" ==== Unite-launcher {{
+" thanks! http://d.hatena.ne.jp/osyo-manga/20111010/1318228589
+let s:unite_source = { "name" : "shortcut" }
+function! s:unite_source.gather_candidates(args, context)
+   let cmds = {
+\      "Unite bundled_gem"  : "Unite rails/bundled_gem",
+\      "Truncate space"  : "call FormatCode()",
+\      "1.set paste"  : "set paste",
+\      "2.set nopaste"  : "set nopaste",
+\  }
 
-" ====Keymap when Open
+   return values(map(cmds, "{
+\      'word' : v:key,
+\      'source' : 'shortcut',
+\      'kind' : 'command',
+\      'action__command' : v:val
+\  }"))
+endfunction
+call unite#define_source(s:unite_source)
+" 呼び出しのキーマップ
+nnoremap <silent> <space>ll :Unite shortcut<CR>
+"}}
+" ==== Keymap when Open
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -139,7 +166,28 @@ au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 call unite#custom_source('file_mru',    'max_candidates', 10)
 call unite#custom_source('git_cached ', 'max_candidates', 10000)
 "}}}
-"
+
+
+"== For neosnippet {{{
+imap <C-k> <Plug>(neosnippet_expand_or_jump)
+"nmap <C-k> <Plug>(neosnippet_expand_or_jump)
+"smap <C-k> <Plug>(neosnippet_expand_or_jump)
+"xmap <C-k> <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
+"}}}
+
 
 "== For Grep.vim {{{
 nnoremap <silent> <F3> :Grep<CR>
@@ -183,18 +231,20 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " }}}
 "}}}
 
-"== For Tabular.vim
+"== For Tabular.vim {{{
 " =
-nmap <space># :Tabularize /#<CR>
-vmap <space># :Tabularize /#<CR>
+nmap <leader># :Tabularize /#<CR>
+vmap <leader># :Tabularize /#<CR>
 " =
-nmap <space>= :Tabularize /=<CR>
-vmap <space>= :Tabularize /=<CR>
+nmap <leader>= :Tabularize /=<CR>
+vmap <leader>= :Tabularize /=<CR>
 " |
-nmap <space>a :Tabularize /\|<CR>
-vmap <space>a :Tabularize /\|<CR>
+nmap <leader>a :Tabularize /\|<CR>
+vmap <leader>a :Tabularize /\|<CR>
+"}}}
 
-"== for Fugitive.vim
+
+"== For Fugitive.vim {{{
 nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
@@ -203,9 +253,11 @@ function! ToggleGstatus()
     execute "Gstatus"
   endif
 endfunction
+"}}}
+
 
 "== For toggle case vim {{{
-nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
+"nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
 "}}}
 
 
@@ -304,13 +356,14 @@ let g:RspecSplitHorizontal=10
 "nnoremap <silent> <space>r :RunSpecLine<CR>
 "}}}
 
+
 "== For dash
 function! s:dash(...)
   let word = len(a:000) == 0 ? input('Dash search: ') : a:1
   call system(printf("open dash://'%s'", word))
 endfunction
 command! -nargs=? Dash call <SID>dash(<f-args>)
-nnoremap <silent> <C-K><C-K> :<C-u>Dash <C-R><C-W><CR>
+nnoremap <silent> <leader><C-k> :<C-u>Dash <C-R><C-W><CR>
 
 "== For dispatch-vim
 noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
@@ -348,8 +401,10 @@ autocmd BufRead,BufNew * match JpSpace / /
 
 "== User function
 function! FormatCode()
-  execute "%s/  *$//"
-  execute "%s/ / /g"
+  let s:line = line(".") - 1
+  execute "silent! %s/  *$//"
+  execute "silent! %s/ / /g"
+  execute "move " . s:line
 endfunction
 
 
@@ -439,4 +494,5 @@ hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guif
 
 "== Custome Mapping
 command! VimrcReload :source ~/.vimrc
+command! Snipedit :vs ~/.vim/snippets/ruby.snip
 
