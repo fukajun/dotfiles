@@ -135,10 +135,10 @@ let g:unite_source_grep_max_candidates = 100
 let s:unite_source = { "name" : "shortcut" }
 function! s:unite_source.gather_candidates(args, context)
    let cmds = {
-\      "Unite bundled_gem"  : "Unite rails/bundled_gem",
-\      "Truncate space"  : "call FormatCode()",
-\      "1.set paste"  : "set paste",
-\      "2.set nopaste"  : "set nopaste",
+\      "Unite bundled_gem" : "Unite rails/bundled_gem",
+\      "Truncate space"    : "call FormatCode()",
+\      '1.set paste'       : 'set paste',
+\      '2.set nopaste'     : 'set nopaste',
 \  }
 
    return values(map(cmds, "{
