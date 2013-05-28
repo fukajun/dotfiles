@@ -1,37 +1,12 @@
-snippet lambda error
-abbr lambda should raise error 
-    lambda{
-      ${1}
-    }.should raise_error
+snippet     #coding: utf-8
+abbr        # coding: utf-8
+    # coding: utf-8
 
-snippet beforeeach
-abbr before(:each) do
-    before(:each) do
-      ${1}
-    end
-
-snippet it
-abbr it do
-    it '${1}' do
-      ${2}
-    end
-
-snippet context
-abbr context do
-    context '${1}' do
-      it '${2}' do
-        ${3}
-      end
-    end
-
-snippet describe 
-abbr describe do
-    describe '${1}' do
-      context '${2}' do
-        it '${3}' do
-          ${4}
-        end
-      end
+snippet     class
+abbr        class
+    # coding: utf-8
+    class ${1}
+        ${2}
     end
 
 snippet     if
@@ -78,3 +53,49 @@ snippet     urlencode
     # coding: utf-8
     require 'erb'
     puts ERB::Util.url_encode '${1}'
+
+# For rspec
+snippet save_and_open_page
+abbr save_and_open_page
+    save_and_open_page
+
+snippet expect error
+abbr expect should raise error
+    expect{
+      ${1}
+    }.should raise_error
+
+snippet before
+abbr before do
+    before do
+      ${1}
+    end
+
+snippet it
+abbr it {}
+    it { ${2} }
+
+snippet context
+abbr context do
+    context '${1}' do
+      it { ${2} }
+    end
+
+snippet describe
+abbr describe do
+    describe '${1}' do
+      subject { ${2} }
+      context '${3}' do
+        it { ${4} }
+      end
+    end
+
+snippet let
+abbr let { }
+    let { '${1}' }
+
+## Sample code
+snippet sample check
+abbr check Numeric?
+    Integer(${1}) rescue ${2}
+
