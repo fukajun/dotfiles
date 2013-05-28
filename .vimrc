@@ -30,6 +30,7 @@ NeoBundle 'basyura/unite-rails'
 NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'h1mesuke/unite-outline'
+NeoBundle 'fukajun/unite-actions'
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
@@ -38,8 +39,8 @@ NeoBundle 'tpope/vim-surround'
 NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'mattn/gist-vim'
-NeoBundle 'mattn/webapi-vim'
+NeoBundle 'terryma/vim-multiple-cursors'
+"NeoBundle 'mattn/multi-vim'
 
 "-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
@@ -104,7 +105,7 @@ autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") 
 "== For Unite.vim {{{
 let g:unite_enable_start_insert=1
 " ==== Command
-noremap <silent> <C-w> :<C-u>Unite command mapping<CR>
+"noremap <silent> <leader>lc :<C-u>Unite command mapping<CR>
 " ==== Buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 " ==== Outline
@@ -114,44 +115,41 @@ nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracke
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
 " ===== Unite-rails
-noremap :rc :<C-u>Unite rails/controller<CR>
-noremap :rm :<C-u>Unite rails/model<CR>
-noremap :rv :<C-u>Unite rails/view<CR>
-noremap :rg :<C-u>Unite rails/bundled_gem<CR>
-" ===== Unite-grep
+"noremap :rc :<C-u>Unite rails/controller<CR>
+"noremap :rm :<C-u>Unite rails/model<CR>
+"noremap :rv :<C-u>Unite rails/view<CR>
+"noremap :rg :<C-u>Unite rails/bundled_gem<CR>
+"" ===== Unite-grep
 function UniteGrepGitRepo()
   let git_home = system('git rev-parse --show-toplevel')[0:-2]
   let cmd = "Unite grep:" . git_home . "::"
   execute cmd
 endfunction
-nnoremap <leader>j :call UniteGrepGitRepo()<CR>
 nnoremap <leader>g :<C-u>Unite grep<CR>
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -U '
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
-" ==== Unite-launcher {{
-" thanks! http://d.hatena.ne.jp/osyo-manga/20111010/1318228589
-let s:unite_source = { "name" : "shortcut" }
-function! s:unite_source.gather_candidates(args, context)
-   let cmds = {
-\      "Unite bundled_gem" : "Unite rails/bundled_gem",
-\      "Truncate space"    : "call FormatCode()",
-\      '1.set paste'       : 'set paste',
-\      '2.set nopaste'     : 'set nopaste',
-\  }
+" ==== Unite-actions {{
+let g:unite_source_actions = {
+      \ "Delete tapp"               : "execute('%s/.tapp//gc')",
+      \ "Show buffer"               : "ls<CR>:buffer<CR>",
+      \ "Unite bundled_gem"         : "Unite rails/bundled_gem",
+      \ "Unite command"             : "Unite command mapping",
+      \ "Find git repo"             : "call UniteGrepGitRepo()",
+      \ "Find by grep"              : "Unite grep",
+      \ "Formt code Truncate space" : "call FormatCode()",
+      \ "Create spec file"          : "call CreateSpecFile()",
+      \ "Edit Snippet for ruby"     : "vs ~/.vim/snippets/ruby.snip",
+      \ "Reload vimrc"              : "source ~/.vimrc",
+      \ "_Set paste"                : "set paste",
+      \ "_Set nopaste"              : "set nopaste",
+      \ "Bundle db:resetup full"    : "echo 'bundle exec rake db:resetup; bundle exec rake import:suppliers; bundle exec rake import:items; bundle exec rake db:setup RAILS_ENV=test'",
+      \ "Git log"                   : "!git ll",
+      \ }
 
-   return values(map(cmds, "{
-\      'word' : v:key,
-\      'source' : 'shortcut',
-\      'kind' : 'command',
-\      'action__command' : v:val
-\  }"))
-endfunction
-call unite#define_source(s:unite_source)
-" 呼び出しのキーマップ
-nnoremap <silent> <space>ll :Unite shortcut<CR>
-"}}
+nnoremap <silent> <leader>l :Unite actions<CR>
+""}}
 " ==== Keymap when Open
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -163,7 +161,7 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
-call unite#custom_source('file_mru',    'max_candidates', 10)
+call unite#custom_source('file_mru',    'max_candidates', 5)
 call unite#custom_source('git_cached ', 'max_candidates', 10000)
 "}}}
 
@@ -282,8 +280,8 @@ autocmd FileType quickrun AnsiEsc
 
 
 "== For quieck run {{{
-nnoremap <space>r :QuickRun <CR>
-"nnoremap <space>r :QuickRun >> buffer -mode v<CR>
+nnoremap <leader>r :QuickRun <CR>
+"nnoremap <leader>r :QuickRun >> buffer -mode v<CR>
 
 let g:quickrun_config = {}
 let g:quickrun_config._ = {
@@ -326,7 +324,7 @@ function! RSpecQuickrun()
   else
     let b:quickrun_config = {'type' : 'rspec/bundle'}
   end
-  nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
+  nnoremap <expr><silent> <leader>t "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
@@ -336,7 +334,7 @@ function! CucumberQuickrun()
   else
     let b:quickrun_config = {'type' : 'cucumber/bundle'}
   end
-  nnoremap <expr><silent> <space>lr "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
+  nnoremap <expr><silent> <leader>t "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
 endfunction
 autocmd BufReadPost *.feature call CucumberQuickrun()
 
@@ -350,11 +348,6 @@ command! -nargs=0 UseZeus call SetUseZeus()
 "}}}
 
 
-"== For vim-rspec {{{
-let g:RspecSplitHorizontal=10
-"nnoremap <silent> <space>ra :RunSpec<CR>
-"nnoremap <silent> <space>r :RunSpecLine<CR>
-"}}}
 
 
 "== For dash
@@ -363,11 +356,18 @@ function! s:dash(...)
   call system(printf("open dash://'%s'", word))
 endfunction
 command! -nargs=? Dash call <SID>dash(<f-args>)
-nnoremap <silent> <leader><C-k> :<C-u>Dash <C-R><C-W><CR>
+nnoremap <silent> <leader>d :<C-u>Dash <C-R><C-W><CR>
 
 "== For dispatch-vim
-noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
+"noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
 
+
+"== For multi cursor
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_next_key='<C-j>'
+let g:multi_cursor_prev_key='<C-p>'
+let g:multi_cursor_skip_key='<C-x>'
+let g:multi_cursor_quit_key='<Esc>'
 
 
 "######################
@@ -376,6 +376,9 @@ noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
 
 
 "==  Vim Editor Setting
+set synmaxcol=200
+set nowrap
+set history=10000
 set visualbell
 set tabstop=2
 set shiftwidth=2
@@ -404,18 +407,20 @@ function! FormatCode()
   let s:line = line(".") - 1
   execute "silent! %s/  *$//"
   execute "silent! %s/ / /g"
-  execute "move " . s:line
+  execute "norm " . s:line . "G"
+endfunction
+
+function! CreateSpecFile()
+  let s:file = expand("%<")
+  let s:file = substitute(s:file, "app/", "spec/", "")
+  let s:file = s:file . "_spec.rb"
+  execute "e " . s:file
 endfunction
 
 
 "== User key mapping
-nmap <Space>b :ls<CR>:buffer<CR>
-nmap <Space>f :edit .<CR>
-nmap <Space>v :vsplit<CR><C-w><C-w>:ls<CR>:buffer<CR>
-nmap <Space>V :Vexplore!<CR><CR>
-nmap <Space>ds :<C-u>call<Space>FormatCode()<CR>
-nmap <Space>"" :<C-u>s/"/'/g<CR>
-nmap <Space>dpp :<C-u>s/.tapp//g<CR>
+nmap <Space>' :<C-u>s/'/"/g<CR>
+nmap <Space>" :<C-u>s/"/'/g<CR>
 inoremap jj <Esc>
 "-- for visual mode paste
 vnoremap <C-p> <Nop>
@@ -493,6 +498,4 @@ hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guif
 
 
 "== Custome Mapping
-command! VimrcReload :source ~/.vimrc
-command! Snipedit :vs ~/.vim/snippets/ruby.snip
 
