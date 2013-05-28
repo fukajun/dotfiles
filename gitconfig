@@ -5,7 +5,7 @@
 	br = branch
 	di = diff
 	ad = add
-	ls = log --stat
+	l = log --stat
 	ll = log --oneline --left-right --graph
 	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
 	pr = pull --rebase
@@ -21,6 +21,12 @@
 	odt-pl = pull --rebase origin develop
 	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
 	odt-autops = "!$SHELL -c \"git odt-pr; git odt-ps `git cbr`\""
+	# git update
+	u = "!sh -c 'git ft; git rsm; git delete-merged-branches'"
+	ft = fetch --prune
+	rsm = update-ref refs/heads/master origin/master
+	delete-merged-branches = !"git branch --merged master | grep -v master | grep -v '*' | xargs git branch -d"
+
 [user]
 	name = J.Fukaya
 	email = fukajun.shark@gmail.com
