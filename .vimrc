@@ -99,6 +99,7 @@ filetype plugin indent on
 "== For NERDTree {{{
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
 autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
+let g:NERDTreeWinSize = 60
 "}}}
 
 
