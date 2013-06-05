@@ -131,7 +131,9 @@ let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
+
 let g:unite_source_actions = {
+      \ "Use zeus"                  : "UseZeus",
       \ "Delete tapp"               : "execute('%s/.tapp//gc')",
       \ "Show buffer"               : "ls<CR>:buffer<CR>",
       \ "Unite bundled_gem"         : "Unite rails/bundled_gem",
