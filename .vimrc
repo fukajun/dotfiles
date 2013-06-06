@@ -426,6 +426,12 @@ inoremap jj <Esc>
 " == For visual mode paste
 vnoremap <C-p> <Nop>
 vnoremap <C-p> "0p<CR>
+" == For bracket completion
+inoremap {} {}<LEFT>
+inoremap [] []<LEFT>
+inoremap () ()<LEFT>
+inoremap "" ""<LEFT>
+inoremap '' ''<LEFT>
 
 " Cursor line
 setlocal cursorline
