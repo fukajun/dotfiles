@@ -1,4 +1,4 @@
-"------- memo -------
+"-------------------------------- memo ---------------------------------
 " zi  折り畳みの有効無効の切り替え
 " zf  折り畳みを作成する
 " za  折り畳みの開け閉め
@@ -16,7 +16,7 @@
 " $ git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
 "------------------------------------------------------------------------
 set nocompatible
-"== Bundle plugins
+" == Bundle plugins
 if has('vim_starting')
    set runtimepath+=~/.vim/bundle/neobundle.vim/
 endif
@@ -24,6 +24,7 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 NeoBundleFetch 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 "------------------------------------------------------------------------
+"-- File Unite
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'basyura/unite-rails'
@@ -31,6 +32,7 @@ NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'fukajun/unite-actions'
+"-- Other plugin
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
@@ -40,11 +42,8 @@ NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'godlygeek/tabular'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'terryma/vim-multiple-cursors'
-"NeoBundle 'mattn/multi-vim'
-
-"-- Move Cursor plugin
 NeoBundle 'edsono/vim-matchit'
-"-- File manipiration plugin
+"-- File manupiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
 "-- Execute command in vim
@@ -68,13 +67,13 @@ NeoBundle 'ColorSchemeMenuMaker'
 NeoBundle 'desert-warm-256'
 NeoBundle 'gmarik/ingretu'
 NeoBundle 'tomasr/molokai'
-
-filetype plugin indent on
 NeoBundleCheck
 
-"##
-"## Vim initialize
-"##
+filetype plugin indent on
+
+"------------------------------------------------------------------------
+" Vim initialize
+"------------------------------------------------------------------------
 augroup MyAutocmd
   autocmd!
 augroup END
@@ -86,31 +85,34 @@ command!
 
 let mapleader = " "
 
-"##
-"## For Plugin settings
-"##
 
-"== For CoffeeScript {{{
+"------------------------------------------------------------------------
+" For Plugin settings
+"------------------------------------------------------------------------
+" == For CoffeeScript {{{
 syntax enable
 filetype plugin indent on
 "}}}
 
 
-"== For NERDTree {{{
+" == For NERDTree {{{
 nnoremap <silent> <C-]> :<C-u>:NERDTreeToggle<CR>
 autocmd bufleave * if (exists("b:NERDTreeType") && b:NERDTreeType == "primary") | exe "NERDTreeToggle" | endif
 let g:NERDTreeWinSize = 60
 "}}}
 
 
-"== For Unite.vim {{{
+" == For Unite.vim {{{
 let g:unite_enable_start_insert=1
+call unite#custom_source('file_mru',    'max_candidates', 5)
+call unite#custom_source('git_cached ', 'max_candidates', 10000)
+
 " ==== Command
 "noremap <silent> <leader>lc :<C-u>Unite command mapping<CR>
 " ==== Buffers
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 " ==== Outline
-nnoremap <silent> <C-l> :<C-u>Unite outline<CR>
+nnoremap <silent> <Leader>; :<C-u>Unite outline<CR>
 " ==== File list
 nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
@@ -135,6 +137,7 @@ let g:unite_source_grep_max_candidates = 100
 
 let g:unite_source_actions = {
       \ "Use zeus"                  : "UseZeus",
+      \ "Inclement"                 : "execute('norm ywjdw\"0P')",
       \ "Delete tapp"               : "execute('%s/.tapp//gc')",
       \ "Show buffer"               : "ls<CR>:buffer<CR>",
       \ "Unite bundled_gem"         : "Unite rails/bundled_gem",
@@ -164,12 +167,10 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
-call unite#custom_source('file_mru',    'max_candidates', 5)
-call unite#custom_source('git_cached ', 'max_candidates', 10000)
 "}}}
 
 
-"== For neosnippet {{{
+" == For neosnippet {{{
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
 "nmap <C-k> <Plug>(neosnippet_expand_or_jump)
 "smap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -190,13 +191,13 @@ endif
 "}}}
 
 
-"== For Grep.vim {{{
+" == For Grep.vim {{{
 nnoremap <silent> <F3> :Grep<CR>
 nnoremap <silent> <F4> :Rgrep<CR>
 "}}}
 
 
-"== For Neocomplecache {{{
+" == For Neocomplecache {{{
 " 補完・履歴 neocomplcache
 set infercase
 " neocomplcache
@@ -232,7 +233,7 @@ inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " }}}
 "}}}
 
-"== For Tabular.vim {{{
+" == For Tabular.vim {{{
 " =
 nmap <leader># :Tabularize /#<CR>
 vmap <leader># :Tabularize /#<CR>
@@ -245,7 +246,7 @@ vmap <leader>a :Tabularize /\|<CR>
 "}}}
 
 
-"== For Fugitive.vim {{{
+" == For Fugitive.vim {{{
 nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
@@ -257,14 +258,12 @@ endfunction
 "}}}
 
 
-"== For toggle case vim {{{
+" == For toggle case vim {{{
 "nnoremap <silent> <C-k> :<C-u>call<Space>ToggleCase()<CR>
 "}}}
 
 
-"== For vim-alter {{{
-"nmap <F3> <Plug>(altr-forward)
-"nmap <F2> <Plug>(altr-back)
+" == For vim-alter {{{
 "nmap <C-l> <Plug>(altr-forward)
 nmap <C-h> <Plug>(altr-back)
 " For ruby tdd
@@ -277,12 +276,12 @@ call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
 "}}}
 
 
-"== For AnsiEsc {{{
+" == For AnsiEsc {{{
 autocmd FileType quickrun AnsiEsc
 "}}}
 
 
-"== For quieck run {{{
+" == For quieck run {{{
 nnoremap <leader>r :QuickRun <CR>
 "nnoremap <leader>r :QuickRun >> buffer -mode v<CR>
 
@@ -351,34 +350,33 @@ command! -nargs=0 UseZeus call SetUseZeus()
 "}}}
 
 
-
-
-"== For dash
+" == For dash {{{
 function! s:dash(...)
   let word = len(a:000) == 0 ? input('Dash search: ') : a:1
   call system(printf("open dash://'%s'", word))
 endfunction
 command! -nargs=? Dash call <SID>dash(<f-args>)
 nnoremap <silent> <leader>d :<C-u>Dash <C-R><C-W><CR>
+"}}}
 
-"== For dispatch-vim
+
+" == For dispatch-vim {{{
 "noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
+"}}}
 
 
-"== For multi cursor
+" == For multi cursor {{{
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key='<C-j>'
 let g:multi_cursor_prev_key='<C-p>'
 let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
+"}}}
 
 
-"######################
-"#  For Vim settings
-"######################
-
-
-"==  Vim Editor Setting
+"------------------------------------------------------------------------
+" For Vim settings
+"------------------------------------------------------------------------
 set synmaxcol=200
 set nowrap
 set history=10000
@@ -397,15 +395,16 @@ set virtualedit=block
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
 
-"==  Display tab multibyte space
+" ==  Display tab multibyte space {{{
 set lcs=tab:>.,trail:_,extends:\
 set list
 highlight SpecialKey cterm=NONE ctermfg=7 guifg=7
 highlight JpSpace cterm=underline ctermfg=7 guifg=7
 autocmd BufRead,BufNew * match JpSpace / /
+"}}}
 
 
-"== User function
+" == Custom function {{{
 function! FormatCode()
   let s:line = line(".") - 1
   execute "silent! %s/  *$//"
@@ -419,22 +418,27 @@ function! CreateSpecFile()
   let s:file = s:file . "_spec.rb"
   execute "e " . s:file
 endfunction
+"}}}
 
-
-"== User key mapping
-nmap <Space>' :<C-u>s/'/"/g<CR>
-nmap <Space>" :<C-u>s/"/'/g<CR>
+" == Custom key mapping
+nmap <Space>" :<C-u>s/'/"/g<CR>
+nmap <Space>' :<C-u>s/"/'/g<CR>
+nmap [[ :w<CR>
+noremap <C-t> :set invwrap<CR>
 inoremap jj <Esc>
-"-- for visual mode paste
+" == For visual mode paste
 vnoremap <C-p> <Nop>
 vnoremap <C-p> "0p<CR>
+" == For bracket completion
+inoremap {} {}<LEFT>
+inoremap [] []<LEFT>
+inoremap () ()<LEFT>
+inoremap "" ""<LEFT>
+inoremap '' ''<LEFT>
 
-
-"==  Cursor line
+" Cursor line
 setlocal cursorline
-
-
-"==  Status line
+" -- Status line
 " ステータスラインの表示
   set statusline+=[%n%{bufnr('$')>1?'/'.bufnr('$'):''}%{winnr('$')>1?':'.winnr().'/'.winnr('$'):''}]
   set statusline=%<     " 行が長すぎるときに切り詰める位置
@@ -464,7 +468,7 @@ endif
   set statusline+=%P    " ファイル内の何％の位置にあるか
 
 
-"== Remember last open curor position
+" == Remember last open curor position
 if has("autocmd")
   autocmd BufReadPost *
     \ if line("'\"") > 0 && line ("'\"") <= line("$") |
@@ -473,32 +477,25 @@ if has("autocmd")
 endif
 
 
-"== For Quickfix Controlle
 " For quickfix list
+" == For Quickfix Controlle
 nnoremap <space>j  :cnext<Return>
 nnoremap <space>k  :cprevious<Return>
-
-
-"== Auto adding quickfix to vimgrep
+" == Auto adding Quickfix to vimgrep
 au QuickfixCmdPost vimgrep cw
 
 
-"== IndentGuide Setting
+" == IndentGuide Setting
 autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=none ctermbg=none
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=black
 let g:indent_guides_auto_colors = 0
 let g:indent_guides_enable_on_vim_startup = 1
 
 
-"== Color schema
-"colorscheme wombat256mod
+" == Color schema
 colorscheme railscasts
-"colorscheme molokai
+"colorscheme wombat256mod
 
-
-"==  Matchpare Color
+" ==  Matchpair Color
 hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
-
-
-"== Custome Mapping
 
