@@ -94,8 +94,39 @@ snippet let
 abbr let { }
     let { '${1}' }
 
+snippet sample spec
+abbr describe Target
+    # coding: utf-8
+    require 'spec_helper'
+
+    describe '${1}' do
+      describe '${2}' do
+        subject { ${3} }
+        context '${4}' do
+          it { ${5} }
+        end
+      end
+    end
+
 ## Sample code
 snippet sample check
 abbr check Numeric?
     Integer(${1}) rescue ${2}
 
+snippet sample sjisable
+abbr sjisable
+    def sjisable(str)
+      cstr = str  
+      cstr = exchange(cstr, "U+301C", "U+FF5E") # wave-dash  
+      cstr = exchange(cstr, "U+2212", "U+FF0D") # full-width minus  
+      cstr = exchange(cstr, "U+00A2", "U+FFE0") # cent as currency  
+      cstr = exchange(cstr, "U+00A3", "U+FFE1") # lb(pound) as currency  
+      cstr = exchange(cstr, "U+00AC", "U+FFE2") # not in boolean algebra  
+      cstr = exchange(cstr, "U+2014", "U+2015") # hyphen  
+      cstr = exchange(cstr, "U+2016", "U+2225") # double vertical lines  
+    end  
+    def exchange(str, before_str, after_str)
+      bs = before_str.match(/U\+(\w+)/)[1].to_i(16).tapp
+      as = after_str.match(/U\+(\w+)/)[1].to_i(16).tapp
+      str.gsub(bs.chr('UTF-8'), as.chr('UTF-8')).tapp
+    end
