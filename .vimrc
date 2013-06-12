@@ -497,5 +497,6 @@ colorscheme railscasts
 "colorscheme wombat256mod
 
 " ==  Matchpair Color
-hi MatchParen term=standout ctermbg=LightGrey ctermfg=Black guibg=LightGrey guifg=Black
+let loaded_matchparen = 1
+hi MatchParen term=standout ctermbg=LightYellow ctermfg=Red guibg=LightBlue guifg=Black
 
