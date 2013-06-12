@@ -130,3 +130,23 @@ abbr sjisable
       as = after_str.match(/U\+(\w+)/)[1].to_i(16).tapp
       str.gsub(bs.chr('UTF-8'), as.chr('UTF-8')).tapp
     end
+
+snippet     sample_validate
+abbr        validate :target
+    validate :not_same_plaform, if: "self.arrival_platform_id && self.departure_platform_id"
+
+    private
+    def not_same_plaform
+      errors.add(:base, "Can not select same platform") if arrival_platform_id == departure_platform_id
+    end
+
+snippet     sample_datetime_jp
+abbr        datetime_select
+    = sprintf(f.datetime_select(:departure_time,
+      {minute_step: 60,
+       datetime_separator: "%s",
+       discard_minute: true,
+       size: 20,
+       date_separator: '%s',
+       use_month_numbers: true},
+       :class => "short_select"), '年', '月', '日').html_safe + '時'
