@@ -65,11 +65,15 @@ abbr expect should raise error
       ${1}
     }.should raise_error
 
-snippet before
+snippet bef
 abbr before do
     before do
       ${1}
     end
+
+snippet befo
+abbr before {
+    before { ${1} }
 
 snippet it
 abbr it {}
@@ -94,6 +98,13 @@ snippet let
 abbr let { }
     let { '${1}' }
 
+snippet sample_tools
+abbr    group :development
+    group :development, :test do
+     gem 'tapp'
+     gem 'pry'
+    end
+
 snippet sample spec
 abbr describe Target
     # coding: utf-8
@@ -106,6 +117,15 @@ abbr describe Target
           it { ${5} }
         end
       end
+    end
+
+snippet     initialize
+abbr        initialize
+    def initialize(attributes = nil)
+      attributes.each do |k, v|
+        send("#{k.to_s}=", v) if respond_to?("#{k.to_s}=")
+      end if attributes
+      yield self if block_given?
     end
 
 ## Sample code
