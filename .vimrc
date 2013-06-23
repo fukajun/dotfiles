@@ -53,12 +53,18 @@ NeoBundle 'kana/vim-altr'
 "-- For Ruby
 NeoBundle "skwp/vim-rspec.git"
 NeoBundle 'tpope/vim-haml'
+NeoBundle 'slim-template/vim-slim'
 NeoBundle 'tpope/vim-rails'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'csexton/rvm.vim'
 NeoBundle 'ujihisa/rdoc.vim'
 NeoBundle 'hallison/vim-markdown'
+"-- require 'gem install rails_best_practices',
+NeoBundle 'romanvbabenko/rails.vim'
+NeoBundle 'taichouchou2/unite-rails_best_practices',
+"-- require 'gem install reek',
+NeoBundle 'taichouchou2/unite-reek'
 "-- Color schemas
 NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'flazz/vim-colorschemes'
@@ -128,6 +134,7 @@ function UniteGrepGitRepo()
   let cmd = "Unite grep:" . git_home . "::"
   execute cmd
 endfunction
+nnoremap <leader>f :<C-u>call UniteGrepGitRepo()<CR>
 nnoremap <leader>g :<C-u>Unite grep<CR>
 let g:unite_source_grep_command = 'ag'
 let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -U '
@@ -136,6 +143,7 @@ let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
 
 let g:unite_source_actions = {
+      \ "Toggle number"             : "set invnumber",
       \ "Use zeus"                  : "UseZeus",
       \ "Inclement"                 : "execute('norm ywjdw\"0P')",
       \ "Delete tapp"               : "execute('%s/.tapp//gc')",
@@ -152,6 +160,8 @@ let g:unite_source_actions = {
       \ "_Set nopaste"              : "set nopaste",
       \ "Bundle db:resetup full"    : "echo 'bundle exec rake db:resetup; bundle exec rake import:suppliers; bundle exec rake import:items; bundle exec rake db:setup RAILS_ENV=test'",
       \ "Git log"                   : "!git ll",
+      \ "Unite reek"                : "Unite reek",
+      \ "Unite rails_best_practices": "Unite rails_best_practices",
       \ }
 
 nnoremap <silent> <leader>l :Unite actions<CR>
@@ -347,6 +357,7 @@ endfunction
 "call SetUseZeus()
 
 command! -nargs=0 UseZeus call SetUseZeus()
+"call SetUseZeus()
 "}}}
 
 
@@ -379,6 +390,7 @@ let g:multi_cursor_quit_key='<Esc>'
 "------------------------------------------------------------------------
 set synmaxcol=200
 set nowrap
+set clipboard=unnamed
 set history=10000
 set visualbell
 set tabstop=2
@@ -416,7 +428,7 @@ function! CreateSpecFile()
   let s:file = expand("%<")
   let s:file = substitute(s:file, "app/", "spec/", "")
   let s:file = s:file . "_spec.rb"
-  execute "e " . s:file
+  execute "e! " . s:file
 endfunction
 "}}}
 
