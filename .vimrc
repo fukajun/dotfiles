@@ -32,6 +32,8 @@ NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'ujihisa/unite-colorscheme'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'fukajun/unite-actions'
+NeoBundle 'kmnk/vim-unite-giti'
+NeoBundle "osyo-manga/unite-toggle-options.git"
 "-- Other plugin
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
@@ -43,9 +45,11 @@ NeoBundle 'godlygeek/tabular'
 NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'edsono/vim-matchit'
+NeoBundle 'miripiruni/CSScomb-for-Vim'
 "-- File manupiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'airblade/vim-gitgutter'
 "-- Execute command in vim
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-scripts/AnsiEsc.vim'
@@ -123,6 +127,7 @@ nnoremap <silent> <Leader>; :<C-u>Unite outline<CR>
 nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
+nnoremap <silent> <Leader>i :<C-u>UniteWithBufferDir -buffer-name=files file git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 " ===== Unite-rails
 "noremap :rc :<C-u>Unite rails/controller<CR>
 "noremap :rm :<C-u>Unite rails/model<CR>
@@ -143,6 +148,9 @@ let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
 
 let g:unite_source_actions = {
+      \ "Git gutter toggle"         : "GitGutterToggle",
+      \ "Unite toggle-options"      : "Unite toggle-options",
+      \ "Edit vimrc"                : "vs ~/.vimrc",
       \ "Toggle number"             : "set invnumber",
       \ "Use zeus"                  : "UseZeus",
       \ "Inclement"                 : "execute('norm ywjdw\"0P')",
@@ -265,6 +273,7 @@ function! ToggleGstatus()
     execute "Gstatus"
   endif
 endfunction
+command! -nargs=0 Gadd :norm :Gwrite<CR>:w<CR>:bd<CR>
 "}}}
 
 
@@ -353,8 +362,9 @@ autocmd BufReadPost *.feature call CucumberQuickrun()
 function! SetUseZeus()
   let g:use_zeus_rspec = 1
   let g:use_zeus_cucumber = 1
+  call CucumberQuickrun()
+  call RSpecQuickrun()
 endfunction
-"call SetUseZeus()
 
 command! -nargs=0 UseZeus call SetUseZeus()
 "call SetUseZeus()
