@@ -142,7 +142,7 @@ endfunction
 nnoremap <leader>f :<C-u>call UniteGrepGitRepo()<CR>
 nnoremap <leader>g :<C-u>Unite grep<CR>
 let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = ' --nocolor  --nogroup --ignore=''log'' -U '
+let g:unite_source_grep_default_opts = ' --nocolor  --nogroup -i --ignore=''log'' -U '
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
@@ -273,7 +273,7 @@ function! ToggleGstatus()
     execute "Gstatus"
   endif
 endfunction
-command! -nargs=0 Gadd :norm :Gwrite<CR>:w<CR>:bd<CR>
+command! -nargs=0 Gadd :norm :Gwrite<CR>:w<CR>
 "}}}
 
 
