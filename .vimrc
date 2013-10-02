@@ -15,6 +15,10 @@
 " $ mkdir -p ~/.vim/bundle
 " $ git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
 "------------------------------------------------------------------------
+" CUI版からクリップボード使う(fakeclipプラグインいるよ)
+" $ brew install reattach-to-user-namespace
+" $ echo 'set-option -g default-command "reattach-to-user-namespace -l zsh"' >> ~/.tmux.conf
+"------------------------------------------------------------------------
 set nocompatible
 " == Bundle plugins
 if has('vim_starting')
@@ -46,6 +50,7 @@ NeoBundle 'scrooloose/nerdcommenter'
 NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'edsono/vim-matchit'
 NeoBundle 'miripiruni/CSScomb-for-Vim'
+NeoBundle 'kana/vim-fakeclip.git'
 "-- File manupiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
@@ -517,6 +522,7 @@ let g:indent_guides_enable_on_vim_startup = 1
 " == Color schema
 colorscheme railscasts
 "colorscheme wombat256mod
+"colorscheme molokai
 
 " ==  Matchpair Color
 let loaded_matchparen = 1
