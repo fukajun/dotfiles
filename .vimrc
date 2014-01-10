@@ -19,6 +19,10 @@
 " $ brew install reattach-to-user-namespace
 " $ echo 'set-option -g default-command "reattach-to-user-namespace -l zsh"' >> ~/.tmux.conf
 "------------------------------------------------------------------------
+" vimprocのコンパイル
+" $ cd ~/.vim/bundle/vimproc/
+" $ make
+"------------------------------------------------------------------------
 set nocompatible
 " == Bundle plugins
 if has('vim_starting')
@@ -30,6 +34,7 @@ NeoBundle 'Shougo/vimproc'
 "------------------------------------------------------------------------
 "-- File Unite
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'basyura/unite-rails'
 NeoBundle 'sgur/unite-git_grep'
@@ -38,6 +43,8 @@ NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'fukajun/unite-actions'
 NeoBundle 'kmnk/vim-unite-giti'
 NeoBundle "osyo-manga/unite-toggle-options.git"
+NeoBundle "scrooloose/syntastic"
+NeoBundle "osyo-manga/vim-over"
 "-- Other plugin
 NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neocomplcache-rsense'
@@ -51,6 +58,7 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'edsono/vim-matchit'
 NeoBundle 'miripiruni/CSScomb-for-Vim'
 NeoBundle 'kana/vim-fakeclip.git'
+NeoBundle 'bling/vim-airline'
 "-- File manupiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
@@ -175,6 +183,9 @@ let g:unite_source_actions = {
       \ "Git log"                   : "!git ll",
       \ "Unite reek"                : "Unite reek",
       \ "Unite rails_best_practices": "Unite rails_best_practices",
+      \ "cd $GEM_HOME"              : "cd $GEM_HOME",
+      \ "cd spree_core"             : "cd $GEM_HOME/gems/spree_core-1.2.2/",
+      \ "edit memo"                 : "vs ~/dotfiles/memo.md",
       \ }
 
 nnoremap <silent> <leader>l :Unite actions<CR>
@@ -253,6 +264,7 @@ inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplcache#close_popup()
 inoremap <expr><C-e>  neocomplcache#cancel_popup()
+nnoremap / /\v
 " }}}
 "}}}
 
@@ -270,7 +282,7 @@ vmap <leader>a :Tabularize /\|<CR>
 
 
 " == For Fugitive.vim {{{
-nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR>
+nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR><C-w>H<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
     execute "bw .git/index"
@@ -372,6 +384,7 @@ function! SetUseZeus()
 endfunction
 
 command! -nargs=0 UseZeus call SetUseZeus()
+command! -nargs=0 Uze call SetUseZeus()
 "call SetUseZeus()
 "}}}
 
@@ -385,10 +398,22 @@ command! -nargs=? Dash call <SID>dash(<f-args>)
 nnoremap <silent> <leader>d :<C-u>Dash <C-R><C-W><CR>
 "}}}
 
+" == For vim-airline
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+
 
 " == For dispatch-vim {{{
 "noremap :ds "<Esc>:Dispatch zeus rspec % -l \" . line(".") . \"<CR>"
 "}}}
+
+" == For syntastic
+let g:syntastic_mode_map = { 'mode': 'passive',
+            \ 'active_filetypes': [],
+            \ 'passive_filetypes': ['ruby'] }
+let g:syntastic_ruby_checkers = ['mri', 'rubocop']
+let g:syntastic_ruby_rubocop_exe = 'LC_ALL=en_US.UTF-8 rubocop'
 
 
 " == For multi cursor {{{
@@ -399,11 +424,20 @@ let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 "}}}
 
+" over.vim {{{
+" over.vimの起動
+nnoremap <silent> <Leader>m :OverCommandLine<CR>
+" カーソル下の単語をハイライト付きで置換
+nnoremap sub :OverCommandLine<CR>%s/<C-r><C-w>//g<Left><Left>
+" コピーした文字列をハイライト付きで置換
+nnoremap subp y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!', 'g')<CR>!!gI<Left><Left><Left>
+" }}}
+
 
 "------------------------------------------------------------------------
 " For Vim settings
 "------------------------------------------------------------------------
-set synmaxcol=200
+"set synmaxcol=200
 set nowrap
 set clipboard=unnamed
 set history=10000
@@ -412,7 +446,8 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 set number
-set nohlsearch
+"set nohlsearch
+set hlsearch
 set directory=~/.vim/tmp
 set hidden
 set autoindent
@@ -455,13 +490,13 @@ noremap <C-t> :set invwrap<CR>
 inoremap jj <Esc>
 " == For visual mode paste
 vnoremap <C-p> <Nop>
-vnoremap <C-p> "0p<CR>
+vnoremap <C-p> "0p
 " == For bracket completion
-inoremap {} {}<LEFT>
-inoremap [] []<LEFT>
-inoremap () ()<LEFT>
-inoremap "" ""<LEFT>
-inoremap '' ''<LEFT>
+"inoremap {} {}<LEFT>
+"inoremap [] []<LEFT>
+"inoremap () ()<LEFT>
+"inoremap "" ""<LEFT>
+"inoremap '' ''<LEFT>
 
 " Cursor line
 setlocal cursorline

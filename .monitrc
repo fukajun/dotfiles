@@ -1,0 +1,31 @@
+set daemon 60
+
+set logfile syslog facility log_daemon
+
+#set mailserver  localhost
+#set mailserver  smtp.gmail.com port 587  with timeout 30 seconds
+set mailserver smtp.gmail.com port 465 username 'fukajun.shark@gmail.com' password 'sasakama' using sslv3
+#set mail-format {
+#  from: monit@localhost
+#  subject: [WARNING] $HOST : $SERVICE - $EVENT
+#  message: Monit
+#  ACTION  : $ACTION
+#  SERVICE : $SERVICE
+#  at $DATE on $HOST.
+#  DESCRIPTION : $DESCRIPTION
+#}
+set mail-format {
+  From: monit-MESSANGER@$HOST
+  Subject: [WARNING] $HOST monit alert -- $EVENT $SERVICE
+  Message:$EVENT Service $SERVICE
+       Date:        $DATE
+       Action:      $ACTION
+       Host:        $HOST
+       Description: $DESCRIPTION
+
+  monit detected alert.
+  please check message or log.
+  munin: http://omg-admin.ohmyglasses.jp:10080/
+}
+set alert fukajun.shark@gmail.com
+include /Users/fukajun/.monit.d/*

@@ -1,10 +1,12 @@
 [alias]
+	new = "!$SHELL -c \"git fetch &&  git checkout -b $1 origin/master\""
 	co = checkout
 	ci = commit
 	st = "status -s -b"
 	br = branch
 	di = diff
 	ad = add
+	diffc = diff --cached
 	l = log --stat
 	ll = log --oneline --left-right --graph
 	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
@@ -17,15 +19,17 @@
 	cob = "!$SHELL -c \"git checkout -b $1 master\""
 	# delete all branch ignore master
 	brd = "!$SHELL -c \"git branch --merge |grep -v \"master\"|xargs git branch -d\""
-
-	odt-pl = pull --rebase origin develop
-	odt-ps = "!$SHELL -c \"git push origin $1:develop\""
-	odt-autops = "!$SHELL -c \"git odt-pr; git odt-ps `git cbr`\""
+	mergelog = "!$SHELL -c 'git fetch; git log --grep=\"Merge pull request\" origin/master | egrep -v \"^(commit|Merge:|Author:|Date:| +Merge pull)\" | egrep \"[^ ]\" | head -10 | sed \"s/\\[fi.*$//\" | sed \"s/^ */- /\"' __dummy__"
 	# git update
 	u = "!sh -c 'git ft; git rsm; git delete-merged-branches'"
 	ft = fetch --prune
 	rsm = update-ref refs/heads/master origin/master
 	delete-merged-branches = !"git branch --merged master | grep -v master | grep -v '*' | xargs git branch -d"
+	wip = commit -v -m '[wip]'
+	pr = "!$SHELL -c \"git push origin $2; hub pull-request -h ${1}:${2}\""
+	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app1.ap-northeast-1 -C 'cd /ebs/webapps/omg-spree/current/ && git log | head -10'\""
+	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app1.ap-northeast-1 -C 'cd /ebs/webapps/omg-spree/current/ && git log --grep=\\\"Merge pull request\\\" origin/master | egrep -v \\\"^(commit|Merge:|Author:|Date:| +Merge pull)\\\" | egrep \\\"[^ ]\\\" | head -10 | sed \\\"s/\\[fi.*$//\\\" | sed \\\"s/^ */- /\\\"'\""
+ 
 
 [user]
 	name = J.Fukaya
@@ -38,5 +42,12 @@
 	ui = auto
 [core]
 	editor = vim
+	excludesfile = /Users/fukajun/.gitignore_global
 [rebase]
 	autosquash = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true

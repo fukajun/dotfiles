@@ -137,6 +137,10 @@ abbr        initialize
       yield self if block_given?
     end
 
+snippet debug_growl
+abbr    debug_growl
+    Growl.notify{|g| g.message = "## DEBUG #{__FILE__}:#{__LINE__}:${1}"}
+
 ## Sample code
 snippet sample check
 abbr check Numeric?
