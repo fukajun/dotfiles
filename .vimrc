@@ -45,9 +45,12 @@ NeoBundle 'kmnk/vim-unite-giti'
 NeoBundle "osyo-manga/unite-toggle-options.git"
 NeoBundle "scrooloose/syntastic"
 NeoBundle "osyo-manga/vim-over"
+NeoBundle "vim-scripts/SQLUtilities"
+NeoBundle "vim-scripts/Align"
+NeoBundle "kana/vim-arpeggio"
 "-- Other plugin
 NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'Shougo/neocomplcache-rsense'
+"NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
 NeoBundle 'tpope/vim-dispatch'
 NeoBundle 'tpope/vim-surround'
@@ -110,6 +113,19 @@ let mapleader = " "
 
 
 "------------------------------------------------------------------------
+" For custom function
+"------------------------------------------------------------------------
+
+"------------------------------------------------------------------------
+" For custom settings
+"------------------------------------------------------------------------
+" Don't exit vim when closing last tab with :q and :wq, :qa, :wqa
+" cabbrev q   <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'enew' : 'q')<CR>
+" cabbrev wq  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'w\|enew' : 'wq')<CR>
+" cabbrev qa  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'tabonly\|only\|enew' : 'qa')<CR>
+" cabbrev wqa <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'wa\|tabonly\|only\|enew' : 'wqa')<CR>
+
+"------------------------------------------------------------------------
 " For Plugin settings
 "------------------------------------------------------------------------
 " == For CoffeeScript {{{
@@ -153,9 +169,9 @@ function UniteGrepGitRepo()
   execute cmd
 endfunction
 nnoremap <leader>f :<C-u>call UniteGrepGitRepo()<CR>
-nnoremap <leader>g :<C-u>Unite grep<CR>
+nnoremap <leader>g :<C-u>Unite grep:.::<CR>
 let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = ' --nocolor  --nogroup -i --ignore=''log'' -U '
+let g:unite_source_grep_default_opts = ' --nocolor  --nogroup -i --ignore=''(log|tmp)'' -U '
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
@@ -164,6 +180,7 @@ let g:unite_source_actions = {
       \ "Git gutter toggle"         : "GitGutterToggle",
       \ "Unite toggle-options"      : "Unite toggle-options",
       \ "Edit vimrc"                : "vs ~/.vimrc",
+      \ "Reset viminfo"             : "vs ~/.viminfo|g/^-'/d|w",
       \ "Toggle number"             : "set invnumber",
       \ "Use zeus"                  : "UseZeus",
       \ "Inclement"                 : "execute('norm ywjdw\"0P')",
@@ -171,12 +188,11 @@ let g:unite_source_actions = {
       \ "Show buffer"               : "ls<CR>:buffer<CR>",
       \ "Unite bundled_gem"         : "Unite rails/bundled_gem",
       \ "Unite command"             : "Unite command mapping",
-      \ "Find git repo"             : "call UniteGrepGitRepo()",
-      \ "Find by grep"              : "Unite grep",
+      \ "Find git repo"            : "call UniteGrepGitRepo()",
+      \ "Find current by grep"     : "Unite grep",
       \ "Formt code Truncate space" : "call FormatCode()",
       \ "Create spec file"          : "call CreateSpecFile()",
       \ "Edit Snippet for ruby"     : "vs ~/.vim/snippets/ruby.snip",
-      \ "Reload vimrc"              : "source ~/.vimrc",
       \ "_Set paste"                : "set paste",
       \ "_Set nopaste"              : "set nopaste",
       \ "Bundle db:resetup full"    : "echo 'bundle exec rake db:resetup; bundle exec rake import:suppliers; bundle exec rake import:items; bundle exec rake db:setup RAILS_ENV=test'",
@@ -220,7 +236,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 " For snippet_complete marker.
 if has('conceal')
-  set conceallevel=2 concealcursor=i
+  set conceallevel=1 concealcursor=i
 endif
 "}}}
 
@@ -338,7 +354,7 @@ let g:quickrun_config['rspec/zeus'] = {
   \ 'type': 'rspec/zeus',
   \ 'command': 'zeus',
   \ 'outputter': 'buffer',
-  \ 'exec': 'pwd;%c rspec %o --tty --format d --color %s'
+  \ 'exec': 'pwd;bundle exec %c rspec %o --tty --format d --color %s'
   \}
 
 " For Cucumber
@@ -384,10 +400,22 @@ function! SetUseZeus()
 endfunction
 
 command! -nargs=0 UseZeus call SetUseZeus()
-command! -nargs=0 Uze call SetUseZeus()
+command! -nargs=0 Zeus call SetUseZeus()
 "call SetUseZeus()
 "}}}
 
+" == For arpeggio {{{
+"jk同時押しでEsc
+call arpeggio#load()
+Arpeggionmap jk <Esc>
+Arpeggioimap jk <Esc>
+Arpeggiocmap jk <Esc>
+Arpeggiovmap jk <Esc>
+Arpeggionmap fj <Esc>
+Arpeggioimap fj <Esc>
+Arpeggiocmap fj <Esc>
+Arpeggiovmap fj <Esc>
+" }}}
 
 " == For dash {{{
 function! s:dash(...)
@@ -446,8 +474,8 @@ set tabstop=2
 set shiftwidth=2
 set expandtab
 set number
-"set nohlsearch
-set hlsearch
+set nohlsearch
+"set hlsearch
 set directory=~/.vim/tmp
 set hidden
 set autoindent
@@ -488,6 +516,7 @@ nmap <Space>' :<C-u>s/"/'/g<CR>
 nmap [[ :w<CR>
 noremap <C-t> :set invwrap<CR>
 inoremap jj <Esc>
+inoremap kk <Esc>
 " == For visual mode paste
 vnoremap <C-p> <Nop>
 vnoremap <C-p> "0p
@@ -555,8 +584,8 @@ let g:indent_guides_enable_on_vim_startup = 1
 
 
 " == Color schema
-colorscheme railscasts
-"colorscheme wombat256mod
+"colorscheme railscasts
+colorscheme wombat256mod
 "colorscheme molokai
 
 " ==  Matchpair Color
