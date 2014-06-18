@@ -188,8 +188,6 @@ let g:unite_source_actions = {
       \ "Show buffer"               : "ls<CR>:buffer<CR>",
       \ "Unite bundled_gem"         : "Unite rails/bundled_gem",
       \ "Unite command"             : "Unite command mapping",
-      \ "Find git repo"            : "call UniteGrepGitRepo()",
-      \ "Find current by grep"     : "Unite grep",
       \ "Formt code Truncate space" : "call FormatCode()",
       \ "Create spec file"          : "call CreateSpecFile()",
       \ "Edit Snippet for ruby"     : "vs ~/.vim/snippets/ruby.snip",
