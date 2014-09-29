@@ -23,6 +23,15 @@
 " $ cd ~/.vim/bundle/vimproc/
 " $ make
 "------------------------------------------------------------------------
+"------------------------------------------------------------------------
+" init all settings
+"------------------------------------------------------------------------
+set all&
+autocmd!
+
+"------------------------------------------------------------------------
+" NeoBundle Settings
+"------------------------------------------------------------------------
 set nocompatible
 " == Bundle plugins
 if has('vim_starting')
@@ -36,19 +45,20 @@ NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'taka84u9/unite-git'
-NeoBundle 'basyura/unite-rails'
 NeoBundle 'sgur/unite-git_grep'
-NeoBundle 'ujihisa/unite-colorscheme'
-NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'fukajun/unite-actions'
 NeoBundle 'kmnk/vim-unite-giti'
-NeoBundle "osyo-manga/unite-toggle-options.git"
-NeoBundle "scrooloose/syntastic"
-NeoBundle "osyo-manga/vim-over"
-NeoBundle "vim-scripts/SQLUtilities"
-NeoBundle "vim-scripts/Align"
-NeoBundle "kana/vim-arpeggio"
+NeoBundle 'basyura/unite-rails'
+NeoBundle 'osyo-manga/vim-over'
+"NeoBundle 'ujihisa/unite-colorscheme'
+"NeoBundle 'h1mesuke/unite-outline'
+"NeoBundle 'osyo-manga/unite-toggle-options.git'
+"NeoBundle 'tyru/unite-screen.sh'
 "-- Other plugin
+NeoBundle "vim-scripts/SQLUtilities"
+NeoBundle "kana/vim-arpeggio"
+NeoBundle "vim-scripts/Align"
+NeoBundle "scrooloose/syntastic"
 NeoBundle 'Shougo/neocomplcache'
 "NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
@@ -70,11 +80,13 @@ NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-scripts/AnsiEsc.vim'
 NeoBundle 'kana/vim-altr'
+NeoBundle 'Blackrush/vim-gocode'
 "-- For Ruby
 NeoBundle "skwp/vim-rspec.git"
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'slim-template/vim-slim'
 NeoBundle 'tpope/vim-rails'
+NeoBundle 'tpope/vim-bundler'
 NeoBundle 'vim-ruby/vim-ruby'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'csexton/rvm.vim'
@@ -100,9 +112,11 @@ filetype plugin indent on
 "------------------------------------------------------------------------
 " Vim initialize
 "------------------------------------------------------------------------
+""""
 augroup MyAutocmd
   autocmd!
 augroup END
+syntax enable
 
 command!
   \ -bang -nargs=*
@@ -120,16 +134,16 @@ let mapleader = " "
 " For custom settings
 "------------------------------------------------------------------------
 " Don't exit vim when closing last tab with :q and :wq, :qa, :wqa
-" cabbrev q   <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'enew' : 'q')<CR>
-" cabbrev wq  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'w\|enew' : 'wq')<CR>
-" cabbrev qa  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'tabonly\|only\|enew' : 'qa')<CR>
-" cabbrev wqa <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'wa\|tabonly\|only\|enew' : 'wqa')<CR>
+"cabbrev q   <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'enew' : 'q')<CR>
+cabbrev wq  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'w\|enew' : 'wq')<CR>
+"cabbrev qa  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'tabonly\|only\|enew' : 'qa')<CR>
+"cabbrev wqa <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'wa\|tabonly\|only\|enew' : 'wqa')<CR>
+command! -nargs=0 Acopy :norm ggVG"+y 
 
 "------------------------------------------------------------------------
 " For Plugin settings
 "------------------------------------------------------------------------
 " == For CoffeeScript {{{
-syntax enable
 filetype plugin indent on
 "}}}
 
@@ -157,13 +171,15 @@ nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracke
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
 nnoremap <silent> <Leader>i :<C-u>UniteWithBufferDir -buffer-name=files file git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
+nnoremap <silent> <Leader>i :<C-u>UniteWithBufferDir -buffer-name=files file git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
+nnoremap <silent> <Leader>i :<C-u>Unite bookmark<CR>
 " ===== Unite-rails
 "noremap :rc :<C-u>Unite rails/controller<CR>
 "noremap :rm :<C-u>Unite rails/model<CR>
 "noremap :rv :<C-u>Unite rails/view<CR>
 "noremap :rg :<C-u>Unite rails/bundled_gem<CR>
 "" ===== Unite-grep
-function UniteGrepGitRepo()
+function! UniteGrepGitRepo()
   let git_home = system('git rev-parse --show-toplevel')[0:-2]
   let cmd = "Unite grep:" . git_home . "::"
   execute cmd
@@ -177,9 +193,12 @@ let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
 
 let g:unite_source_actions = {
+      \ "Shell"                     : "VimShell",
       \ "Git gutter toggle"         : "GitGutterToggle",
       \ "Unite toggle-options"      : "Unite toggle-options",
       \ "Edit vimrc"                : "vs ~/.vimrc",
+      \ "Reload vimrc"              : "source ~/.vimrc",
+      \ "Edit memo"                : "vs ~/notes/memo.md",
       \ "Reset viminfo"             : "vs ~/.viminfo|g/^-'/d|w",
       \ "Toggle number"             : "set invnumber",
       \ "Use zeus"                  : "UseZeus",
@@ -199,7 +218,7 @@ let g:unite_source_actions = {
       \ "Unite rails_best_practices": "Unite rails_best_practices",
       \ "cd $GEM_HOME"              : "cd $GEM_HOME",
       \ "cd spree_core"             : "cd $GEM_HOME/gems/spree_core-1.2.2/",
-      \ "edit memo"                 : "vs ~/dotfiles/memo.md",
+      \ "edit m emo"                 : "vs ~/dotfiles/memo.md",
       \ }
 
 nnoremap <silent> <leader>l :Unite actions<CR>
@@ -216,7 +235,6 @@ au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
 "}}}
-
 
 " == For neosnippet {{{
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -258,14 +276,15 @@ let g:neocomplcache_enable_underbar_completion = 0
 
 " default config"{{{
 let g:neocomplcache_force_overwrite_completefunc = 1
-let g:neocomplcache#sources#rsense#home_directory = '/Users/fukajun/lib/rsense-0.3'
+"let g:neocomplcache#sources#rsense#home_directory = '/Users/fukajun/lib/rsense-0.3'
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_skip_auto_completion_time = '0.5'
 if !exists('g:neocomplcache_omni_patterns')
   let g:neocomplcache_omni_patterns = {}
 endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
+let g:neocomplcache_omni_patterns.ruby = ''
 "}}}
 
 " keymap {{{
@@ -346,13 +365,19 @@ let g:quickrun_config['rspec/bundle'] = {
   \ 'type': 'rspec/bundle',
   \ 'command': 'rspec',
   \ 'outputter': 'buffer',
-  \ 'exec': 'bundle exec %c %o --drb --tty --format d --color %s'
+  \ 'exec': 'bundle exec %c --drb --tty --format d --color %s%o'
   \}
 let g:quickrun_config['rspec/zeus'] = {
   \ 'type': 'rspec/zeus',
   \ 'command': 'zeus',
   \ 'outputter': 'buffer',
-  \ 'exec': 'pwd;bundle exec %c rspec %o --tty --format d --color %s'
+  \ 'exec': 'pwd;bundle exec %c rspec --tty --format d --color %s%o'
+  \}
+let g:quickrun_config['rspec/spring'] = {
+  \ 'type': 'rspec/spring',
+  \ 'command': 'spring',
+  \ 'outputter': 'buffer',
+  \ 'exec': 'pwd;bundle exec %c rspec --tty --format d --color %s%o'
   \}
 
 " For Cucumber
@@ -370,13 +395,16 @@ let g:quickrun_config['cucumber/zeus'] = {
   \}
 
 " Referenced @joker1007
+" :h quickrun-option-exec
 function! RSpecQuickrun()
   if exists('g:use_zeus_rspec')
     let b:quickrun_config = {'type' : 'rspec/zeus'}
+  elseif exists('g:use_spring_rspec')
+    let b:quickrun_config = {'type' : 'rspec/spring'}
   else
     let b:quickrun_config = {'type' : 'rspec/bundle'}
   end
-  nnoremap <expr><silent> <leader>t "<Esc>:QuickRun -cmdopt \"-l " . line(".") . "\"<CR>"
+  nnoremap <expr><silent> <leader>t "<Esc>:QuickRun -cmdopt \":" . line(".") . "\"<CR>"
 endfunction
 autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 
@@ -396,10 +424,18 @@ function! SetUseZeus()
   call CucumberQuickrun()
   call RSpecQuickrun()
 endfunction
+function! SetUseSpring()
+  let g:use_spring_rspec = 1
+  let g:use_spring_cucumber = 1
+  call CucumberQuickrun()
+  call RSpecQuickrun()
+endfunction
 
 command! -nargs=0 UseZeus call SetUseZeus()
+command! -nargs=0 UseSpring call SetUseSpring()
 command! -nargs=0 Zeus call SetUseZeus()
 "call SetUseZeus()
+"call SetUseSpring()
 "}}}
 
 " == For arpeggio {{{
@@ -464,24 +500,35 @@ nnoremap subp y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!', 'g')<CR>!
 " For Vim settings
 "------------------------------------------------------------------------
 "set synmaxcol=200
-set nowrap
-set clipboard=unnamed
-set history=10000
-set visualbell
-set tabstop=2
-set shiftwidth=2
-set expandtab
-set number
-set nohlsearch
 "set hlsearch
-set directory=~/.vim/tmp
-set hidden
 set autoindent
+set backspace=2
+set clipboard=unnamed
+set directory=~/.vim/tmp
+set expandtab
+set helplang=ja
+set hidden
+set history=10000
 set ignorecase
 set incsearch
+set infercase
+set list
+set modelines=0
+set nohlsearch
+set nowrap
+set number
+set scroll=12
+set shiftwidth=2
+set spellcapcheck=
+set tabstop=2
+set ttyfast
+set ttymouse=xterm
 set virtualedit=block
+set visualbell
+set window=0
+set completefunc=neocomplcache#complete#manual_complete
+set fileencodings=ucs-bom,utf-8,default,latin1
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
-
 
 " ==  Display tab multibyte space {{{
 set lcs=tab:>.,trail:_,extends:\
@@ -514,7 +561,7 @@ nmap <Space>' :<C-u>s/"/'/g<CR>
 nmap [[ :w<CR>
 noremap <C-t> :set invwrap<CR>
 inoremap jj <Esc>
-inoremap kk <Esc>
+"inoremap kk <Esc>
 " == For visual mode paste
 vnoremap <C-p> <Nop>
 vnoremap <C-p> "0p
@@ -582,8 +629,8 @@ let g:indent_guides_enable_on_vim_startup = 1
 
 
 " == Color schema
-"colorscheme railscasts
-colorscheme wombat256mod
+colorscheme railscasts
+"colorscheme wombat256mod
 "colorscheme molokai
 
 " ==  Matchpair Color
