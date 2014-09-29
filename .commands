@@ -1,6 +1,17 @@
 #
 # git-now コマンド http://d.hatena.ne.jp/sinsoku/20101208/1291770514
 #
+alias be="bundle exec"
+alias tbe="RAILS_ENV=test bundle exec"
+alias dbe="RAILS_ENV=development bundle exec"
+alias gg="gg_handler"
+gg_handler() {
+  echo "----------------------"
+  git log --oneline --stat | head -10
+  echo "----------------------"
+  git status;
+  echo "----------------------"
+}
 git-now() {
   PREFIX="from now"
   MESSAGE="[${PREFIX}] `date`"
