@@ -22,3 +22,5 @@ if [ -d "$HOME/bin" ] ; then
 fi
 
 alias be="bundle exec"
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
