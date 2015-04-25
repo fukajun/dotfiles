@@ -19,4 +19,5 @@ ln -nsf $HOME/dotfiles/gitconfig     $HOME/.gitconfig
 ln -nsf $HOME/dotfiles/.monitrc      $HOME/.monitrc
 ln -nsf $HOME/dotfiles/.monit.d      $HOME/.monit.d
 ln -nsf $HOME/dotfiles/_vim/snippets/ruby.snip $HOME/.vim/snippets/ruby.snip
+ln -nsf $HOME/dotfiles/_vim/snippets/ruby.snip $HOME/.vim/snippets/haml.snip
 ```

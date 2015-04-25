@@ -1,0 +1,203 @@
+snippet     #coding: utf-8
+abbr        # coding: utf-8
+    # coding: utf-8
+
+snippet     class
+abbr        class
+    # coding: utf-8
+    class ${1}
+        ${2}
+    end
+
+snippet     if
+abbr        if end
+    if ${1:condition}
+        ${2}
+    end
+
+snippet     def
+abbr        def end
+    def ${1:func_name}
+        ${2}
+    end
+
+snippet     do
+abbr        do end
+    do
+        ${1}
+    end
+
+snippet     dovar
+abbr        do |var| end
+    do |${1:var}|
+        ${2}
+    end
+
+snippet     block
+abbr        { |var| }
+    {
+        ${1}
+    }
+
+snippet     blockvar
+abbr        { |var| }
+    { |${1:var}|
+        ${2}
+    }
+
+snippet     edn
+abbr        => end?
+    end
+
+snippet     urlencode
+    # coding: utf-8
+    require 'erb'
+    puts ERB::Util.url_encode '${1}'
+
+# For rspec
+snippet save_and_open_page
+abbr save_and_open_page
+    save_and_open_page
+
+snippet expect error
+abbr expect should raise error
+    expect{
+      ${1}
+    }.should raise_error
+
+snippet bef
+abbr before do
+    before do
+      ${1}
+    end
+
+snippet befo
+abbr before {
+    before { ${1} }
+
+snippet it
+abbr it {}
+    it { ${2} }
+
+snippet context
+abbr context do
+    context '${1}' do
+      it { ${2} }
+    end
+
+snippet describe
+abbr describe do
+    describe '${1}' do
+      subject { ${2} }
+      context '${3}' do
+        it { ${4} }
+      end
+    end
+
+snippet let
+abbr let { }
+    let { '${1}' }
+
+snippet sample_tools
+abbr    group :development
+    group :development, :test do
+     gem 'tapp'
+     gem 'pry'
+    end
+
+snippet sample spec
+abbr describe Target
+    # coding: utf-8
+    require 'spec_helper'
+
+    describe '${1}' do
+      describe '${2}' do
+        subject { ${3} }
+        context '${4}' do
+          it { ${5} }
+        end
+      end
+    end
+
+snippet sample factory_girl
+abbr factory_girl
+    #coding:utf-8
+    FactoryGirl.define do
+      factory :${1} do
+        name 'ruby'
+      end
+    end
+
+snippet     initialize
+abbr        initialize
+    def initialize(attributes = nil)
+      attributes.each do |k, v|
+        send("#{k.to_s}=", v) if respond_to?("#{k.to_s}=")
+      end if attributes
+      yield self if block_given?
+    end
+
+snippet debug_growl
+abbr    debug_growl
+    Growl.notify{|g| g.message = "## DEBUG #{__FILE__}:#{__LINE__}:${1}"}
+
+## Sample code
+snippet sample check
+abbr check Numeric?
+    Integer(${1}) rescue ${2}
+
+snippet sample sjisable
+abbr sjisable
+    def sjisable(str)
+      cstr = str  
+      cstr = exchange(cstr, "U+301C", "U+FF5E") # wave-dash  
+      cstr = exchange(cstr, "U+2212", "U+FF0D") # full-width minus  
+      cstr = exchange(cstr, "U+00A2", "U+FFE0") # cent as currency  
+      cstr = exchange(cstr, "U+00A3", "U+FFE1") # lb(pound) as currency  
+      cstr = exchange(cstr, "U+00AC", "U+FFE2") # not in boolean algebra  
+      cstr = exchange(cstr, "U+2014", "U+2015") # hyphen  
+      cstr = exchange(cstr, "U+2016", "U+2225") # double vertical lines  
+    end  
+    def exchange(str, before_str, after_str)
+      bs = before_str.match(/U\+(\w+)/)[1].to_i(16).tapp
+      as = after_str.match(/U\+(\w+)/)[1].to_i(16).tapp
+      str.gsub(bs.chr('UTF-8'), as.chr('UTF-8')).tapp
+    end
+
+snippet     sample_validate
+abbr        validate :target
+    validate :not_same_plaform, if: "self.arrival_platform_id && self.departure_platform_id"
+
+    private
+    def not_same_plaform
+      errors.add(:base, "Can not select same platform") if arrival_platform_id == departure_platform_id
+    end
+
+snippet     sample_datetime_jp
+abbr        datetime_select
+    = sprintf(f.datetime_select(:departure_time,
+      {minute_step: 60,
+       datetime_separator: "%s",
+       discard_minute: true,
+       size: 20,
+       date_separator: '%s',
+       use_month_numbers: true},
+       :class => "short_select"), '年', '月', '日').html_safe + '時'
+
+snippet     sample_bench
+abbr        Benchmark.measure do
+    Benchmark.measure do
+      ${1}
+    end
+
+snippet     page.save_screensho
+abbr        page.save_screenshot
+    page.save_screenshot 'screenshot.png'
+
+snippet     debug
+abbr        logger.debug "## DEBUG :#{__LINE__}:"
+    logger.debug "## DEBUG :#{__LINE__}:#{${1}}"
+
+snippet     benchmark
+abbr        benchmark "${1}" do
+    benchmark "${1}" do
