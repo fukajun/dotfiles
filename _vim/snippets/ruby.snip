@@ -183,3 +183,50 @@ abbr        datetime_select
        date_separator: '%s',
        use_month_numbers: true},
        :class => "short_select"), '年', '月', '日').html_safe + '時'
+
+snippet     sample_bench
+abbr        Benchmark.measure do
+    Benchmark.measure do
+      ${1}
+    end
+
+snippet     page_save_screenshot
+abbr        page.save_screenshot
+    page.save_screenshot 'screenshot.png'
+
+snippet     debug
+abbr        logger.debug "## DEBUG :#{__LINE__}:"
+    logger.debug "## DEBUG :#{__LINE__}:#{${1}}"
+
+snippet     benchmark
+abbr        benchmark "${1}" do
+    benchmark "${1}" do
+
+snippet     pry
+abbr        binding.pry
+    binding.pry
+
+snippet     page_driver_console_messages
+abbr        page.driver.console_messages
+    p page.driver.console_messages
+
+snippet     ready
+abbr        $(function(){
+    $(function(){
+      ${1}
+    });
+
+snippet     js_execute_tag
+abbr        js_execute_tag
+    js_execute_tag(__FILE__)
+
+snippet     csvimport
+abbr        csvimport
+options     head
+    CSV.foreach(path, CSV_OPTIONS) do |row|
+      begin
+        self.where(sku: row[0], maker: row[16]).first_or_create!
+      rescue => e
+        Rails.logger.warn("CSV Import Error. #{e.inspect}")
+      end
+    end
