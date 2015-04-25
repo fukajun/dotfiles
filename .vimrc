@@ -49,7 +49,8 @@ NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'fukajun/unite-actions'
 NeoBundle 'kmnk/vim-unite-giti'
 NeoBundle 'basyura/unite-rails'
-NeoBundle 'osyo-manga/vim-over'
+NeoBundle 'tacroe/unite-mark'
+"NeoBundle 'osyo-manga/vim-over'
 "NeoBundle 'ujihisa/unite-colorscheme'
 "NeoBundle 'h1mesuke/unite-outline'
 "NeoBundle 'osyo-manga/unite-toggle-options.git'
@@ -57,6 +58,8 @@ NeoBundle 'osyo-manga/vim-over'
 "-- Other plugin
 NeoBundle "vim-scripts/SQLUtilities"
 NeoBundle "kana/vim-arpeggio"
+NeoBundle "kana/vim-smartinput"
+NeoBundle "cohama/vim-smartinput-endwise"
 NeoBundle "vim-scripts/Align"
 NeoBundle "scrooloose/syntastic"
 NeoBundle 'Shougo/neocomplcache'
@@ -71,11 +74,11 @@ NeoBundle 'terryma/vim-multiple-cursors'
 NeoBundle 'edsono/vim-matchit'
 NeoBundle 'miripiruni/CSScomb-for-Vim'
 NeoBundle 'kana/vim-fakeclip.git'
-NeoBundle 'bling/vim-airline'
+"NeoBundle 'bling/vim-airline'
 "-- File manupiration plugin
 NeoBundle 'fukajun/nerdtree'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
+"NeoBundle 'airblade/vim-gitgutter'
 "-- Execute command in vim
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'vim-scripts/AnsiEsc.vim'
@@ -105,6 +108,7 @@ NeoBundle 'ColorSchemeMenuMaker'
 NeoBundle 'desert-warm-256'
 NeoBundle 'gmarik/ingretu'
 NeoBundle 'tomasr/molokai'
+NeoBundle 'szw/vim-tags'
 NeoBundleCheck
 
 filetype plugin indent on
@@ -135,7 +139,7 @@ let mapleader = " "
 "------------------------------------------------------------------------
 " Don't exit vim when closing last tab with :q and :wq, :qa, :wqa
 "cabbrev q   <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'enew' : 'q')<CR>
-cabbrev wq  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'w\|enew' : 'wq')<CR>
+"cabbrev wq  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 && tabpagenr('$') == 1 && winnr('$') == 1 ? 'w\|enew' : 'wq')<CR>
 "cabbrev qa  <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'tabonly\|only\|enew' : 'qa')<CR>
 "cabbrev wqa <C-r>=(getcmdtype() == ':' && getcmdpos() == 1 ? 'wa\|tabonly\|only\|enew' : 'wqa')<CR>
 command! -nargs=0 Acopy :norm ggVG"+y 
@@ -143,6 +147,11 @@ command! -nargs=0 Acopy :norm ggVG"+y
 "------------------------------------------------------------------------
 " For Plugin settings
 "------------------------------------------------------------------------
+" == For vim-smartinput-endwise{{{
+call smartinput_endwise#define_default_rules()
+" }}}
+
+
 " == For CoffeeScript {{{
 filetype plugin indent on
 "}}}
@@ -166,13 +175,14 @@ call unite#custom_source('git_cached ', 'max_candidates', 10000)
 nnoremap <silent> <C-p> :<C-u>Unite buffer<CR>
 " ==== Outline
 nnoremap <silent> <Leader>; :<C-u>Unite outline<CR>
+" ==== Mark
+nnoremap <silent> <Leader>: :<C-u>Unite mark<CR>
 " ==== File list
 nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file -auto-preview<CR>
 "nnoremap <silent> <C-n> :<C-u>Unite -buffer-name=files git_modified git_untracked git_cached buffer file_mru bookmark file <CR>
 nnoremap <silent> <Leader>i :<C-u>UniteWithBufferDir -buffer-name=files file git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
 nnoremap <silent> <Leader>i :<C-u>UniteWithBufferDir -buffer-name=files file git_modified git_untracked file_mru git_cached buffer bookmark file <CR>
-nnoremap <silent> <Leader>i :<C-u>Unite bookmark<CR>
 " ===== Unite-rails
 "noremap :rc :<C-u>Unite rails/controller<CR>
 "noremap :rm :<C-u>Unite rails/model<CR>
@@ -186,8 +196,10 @@ function! UniteGrepGitRepo()
 endfunction
 nnoremap <leader>f :<C-u>call UniteGrepGitRepo()<CR>
 nnoremap <leader>g :<C-u>Unite grep:.::<CR>
+nnoremap <leader>h :<C-u>Unite grep:$GEM_HOME/gems/*<CR>
+nnoremap <leader>b :<C-u>Unite grep:$GEM_HOME/bundler/*<CR>
 let g:unite_source_grep_command = 'ag'
-let g:unite_source_grep_default_opts = ' --nocolor  --nogroup -i --ignore=''(log|tmp)'' -U '
+let g:unite_source_grep_default_opts = ' --nocolor --silent --nogroup -i --ignore=''(min.js|.png|log|tmp)'' -U '
 let g:unite_source_grep_recursive_opt = ''
 let g:unite_source_grep_max_candidates = 100
 " ==== Unite-actions {{
@@ -218,12 +230,14 @@ let g:unite_source_actions = {
       \ "Unite rails_best_practices": "Unite rails_best_practices",
       \ "cd $GEM_HOME"              : "cd $GEM_HOME",
       \ "cd spree_core"             : "cd $GEM_HOME/gems/spree_core-1.2.2/",
-      \ "edit m emo"                 : "vs ~/dotfiles/memo.md",
+      \ "edit m emo"                : "vs ~/dotfiles/memo.md",
+      \ "CMD migrate reset"         : "execute('VimShellExecute rake db:migrate:reset -e test')",
       \ }
 
 nnoremap <silent> <leader>l :Unite actions<CR>
 ""}}
 " ==== Keymap when Open
+au FileType unite nnoremap <silent> <buffer> <expr> <C-b> unite#do_action('mark candidate')
 " ウィンドウを分割して開く
 au FileType unite nnoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
 au FileType unite inoremap <silent> <buffer> <expr> <C-j> unite#do_action('split')
@@ -233,6 +247,8 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 " ESCキーを2回押すと終了する
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
+"au FileType unite imap <silent> <buffer> <C-b> <C-n><Plug>(unite_toggle_mark_current_candidate_up)<Plug>(unite_toggle_mark_current_candidate)<Plug>(unite_toggle_mark_current_candidate)<C-p>
+au FileType unite imap <silent> <buffer> <C-b> <C-n><Plug>(unite_toggle_mark_current_candidate_up)<Space><Plug>(unite_toggle_mark_current_candidate_up)<C-n>
 
 "}}}
 
@@ -342,8 +358,26 @@ call altr#define('%.rb', 'spec/%_spec.rb')
 call altr#define('app/models/%.rb', 'spec/models/%_spec.rb')
 call altr#define('app/controllers/%.rb', 'spec/controllers/%_spec.rb')
 call altr#define('app/helpers/%.rb', 'spec/helpers/%_spec.rb')
+call altr#define('app/views/%.html.haml', 'app/views/%.mobile.haml')
+call altr#define('spec/features/search_spec.rb', 'spec/features/mobile/search_spec.rb')
 "}}}
 
+" == For AnsiEsc {{{
+au BufRead,BufNewFile,BufReadPre *.coffee   set filetype=coffee
+" インデント設定
+autocmd FileType coffee    setlocal sw=2 sts=2 ts=2 et
+" オートコンパイル
+  "保存と同時にコンパイルする
+"""autocmd BufWritePost *.coffee silent make! 
+  "エラーがあったら別ウィンドウで表示
+autocmd QuickFixCmdPost * nested cwindow | redraw! 
+" Ctrl-cで右ウィンドウにコンパイル結果を一時表示する
+nnoremap <silent> <C-C> :CoffeeCompile vert <CR><C-w>h
+function! AutoCoffeeCompile()
+  autocmd BufWritePost *.coffee silent make!
+endfunction
+command! -nargs=0 StartAutoCoffeeCompile call AutoCoffeeCompile()
+"}}}
 
 " == For AnsiEsc {{{
 autocmd FileType quickrun AnsiEsc
@@ -499,7 +533,7 @@ nnoremap subp y:OverCommandLine<CR>%s!<C-r>=substitute(@0, '!', '\\!', 'g')<CR>!
 "------------------------------------------------------------------------
 " For Vim settings
 "------------------------------------------------------------------------
-"set synmaxcol=200
+set synmaxcol=100
 "set hlsearch
 set autoindent
 set backspace=2
@@ -528,6 +562,7 @@ set visualbell
 set window=0
 set completefunc=neocomplcache#complete#manual_complete
 set fileencodings=ucs-bom,utf-8,default,latin1
+set ambiwidth=double
 highlight CursorIM guibg=DarkGreen guifg=NONE ctermbg=DarkGreen ctermfg=NONE
 
 " ==  Display tab multibyte space {{{
@@ -553,9 +588,20 @@ function! CreateSpecFile()
   let s:file = s:file . "_spec.rb"
   execute "e! " . s:file
 endfunction
+function! GitHubLink()
+  let git_home = system('git rev-parse --show-toplevel')[0:-2]
+  let owner_and_repo = system('git config --get remote.origin.url')
+  let owner_and_repo = substitute(owner_and_repo, '^..*:', '', '')
+  let owner_and_repo = substitute(owner_and_repo, '.git', '', '')
+  let file_path = substitute(expand("%"), git_home . '/', '', '')
+  let branch = substitute(system('git rev-parse --abbrev-ref HEAD'), "\n", '', '')
+  let hoge = 'http://github.com/'.owner_and_repo.'/'.'blob'.'/'.branch.'/'.file_path.'#L'.line('.')
+  echo substitute(hoge, "\n", '', '')
+endfunction
 "}}}
 
 " == Custom key mapping
+nmap <Space>o :norm o<ESC>
 nmap <Space>" :<C-u>s/'/"/g<CR>
 nmap <Space>' :<C-u>s/"/'/g<CR>
 nmap [[ :w<CR>
@@ -571,6 +617,25 @@ vnoremap <C-p> "0p
 "inoremap () ()<LEFT>
 "inoremap "" ""<LEFT>
 "inoremap '' ''<LEFT>
+command! -nargs=0 Gurl :call GitHubLink()
+
+" == For tab key settings
+" The prefix key.
+"nnoremap    [Tag]   <Nop>
+"nmap    t [Tag]
+"" Tab jump
+"for n in range(1, 9)
+"  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
+"endfor
+"" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
+"map <silent> [Tag]c :tablast <bar> tabnew<CR>
+"" tc 新しいタブを一番右に作る
+"map <silent> [Tag]x :tabclose<CR>
+"" tx タブを閉じる
+"map <silent> [Tag]n :tabnext<CR>
+"" tn 次のタブ
+"map <silent> [Tag]p :tabprevious<CR>
+"" tp 前のタブ
 
 " Cursor line
 setlocal cursorline
