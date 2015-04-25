@@ -29,8 +29,14 @@ puts Find.find('./')
   end
 ```
 
-### どこまでデプロイしたか
+### vim 一個以上の繰り返し
 
 ```
-ssh mrtaddy@omg-app1.ap-northeast-1 -C "cd /ebs/webapps/omg-spree/current/ && git log | head -10"
+%s/[^/]\+$//
+```
+
+### screen_shot
+
+```
+page.save_screenshot 'screenshot.png'
 ```
