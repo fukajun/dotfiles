@@ -1,7 +1,6 @@
-# Alias
-alias be="bundle exec"
-
+# For itrem2
 export TERM=xterm-256color
+
 # For ghq
 export GOPATH=$HOME
 export PATH=$PATH:$GOPATH/bin
@@ -22,5 +21,7 @@ export LSCOLORS='gxfxcxdxbxGxDxabagacad'
 test -r ~/.bashrc && . ~/.bashrc
 # Load secret
 test -r ~/.secret && . ~/.secret
+# Load command
+test -r ~/.secret && . ~/.commands
 
 
