@@ -11,6 +11,9 @@
 " zR  全ての折り畳みを開く
 " zM  全ての折り畳みを閉じる
 "------------------------------------------------------------------------
+" Setup
+" $ mkdir -p ./.vim/tmp
+"------------------------------------------------------------------------
 " Install NeoBundle
 " $ mkdir -p ~/.vim/bundle
 " $ git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim
@@ -32,18 +35,29 @@ autocmd!
 "------------------------------------------------------------------------
 " NeoBundle Settings
 "------------------------------------------------------------------------
-set nocompatible
-" == Bundle plugins
-if has('vim_starting')
+ " Note: Skip initialization for vim-tiny or vim-small.
+ if !1 | finish | endif
+ if has('vim_starting')
+   if &compatible
+     set nocompatible               " Be iMproved
+   endif
+   " Required:
    set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-call neobundle#rc(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+ endif
+ " Required:
+ call neobundle#begin(expand('~/.vim/bundle/'))
+ " Let NeoBundle manage NeoBundle
+ " Required:
+ NeoBundleFetch 'Shougo/neobundle.vim'
+ " My Bundles here:
+ " Refer to |:NeoBundle-examples|.
+ " Note: You don't set neobundle setting in .gvimrc!
+ call neobundle#end()
 NeoBundle 'Shougo/vimproc'
 "------------------------------------------------------------------------
 "-- File Unite
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'taka84u9/unite-git'
 NeoBundle 'sgur/unite-git_grep'
 NeoBundle 'fukajun/unite-actions'
@@ -58,10 +72,11 @@ NeoBundle 'tacroe/unite-mark'
 "-- Other plugin
 NeoBundle "vim-scripts/SQLUtilities"
 NeoBundle "kana/vim-arpeggio"
-NeoBundle "kana/vim-smartinput"
+"NeoBundle "kana/vim-smartinput"
 NeoBundle "cohama/vim-smartinput-endwise"
 NeoBundle "vim-scripts/Align"
 NeoBundle "scrooloose/syntastic"
+NeoBundle "Shougo/neosnippet-snippets"
 NeoBundle 'Shougo/neocomplcache'
 "NeoBundle 'Shougo/neocomplcache-rsense'
 NeoBundle 'Shougo/neosnippet'
@@ -97,9 +112,9 @@ NeoBundle 'ujihisa/rdoc.vim'
 NeoBundle 'hallison/vim-markdown'
 "-- require 'gem install rails_best_practices',
 NeoBundle 'romanvbabenko/rails.vim'
-NeoBundle 'taichouchou2/unite-rails_best_practices',
+"install errror NeoBundle 'taichouchou2/unite-rails_best_practices',
 "-- require 'gem install reek',
-NeoBundle 'taichouchou2/unite-reek'
+"install error NeoBundle 'taichouchou2/unite-reek'
 "-- Color schemas
 NeoBundle 'jpo/vim-railscasts-theme'
 NeoBundle 'flazz/vim-colorschemes'
@@ -148,7 +163,7 @@ command! -nargs=0 Acopy :norm ggVG"+y
 " For Plugin settings
 "------------------------------------------------------------------------
 " == For vim-smartinput-endwise{{{
-call smartinput_endwise#define_default_rules()
+"call smartinput_endwise#define_default_rules()
 " }}}
 
 
@@ -331,7 +346,6 @@ vmap <leader>a :Tabularize /\|<CR>
 
 
 " == For Fugitive.vim {{{
-nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR><C-w>H<CR>
 function! ToggleGstatus()
   if bufexists(".git/index")
     execute "bw .git/index"
@@ -339,6 +353,7 @@ function! ToggleGstatus()
     execute "Gstatus"
   endif
 endfunction
+nnoremap <silent> <C-@> :call<Space>ToggleGstatus()<CR><C-w>H<CR>
 command! -nargs=0 Gadd :norm :Gwrite<CR>:w<CR>
 "}}}
 
@@ -537,7 +552,7 @@ set synmaxcol=100
 "set hlsearch
 set autoindent
 set backspace=2
-set clipboard=unnamed
+"set clipboard=unnamed
 set directory=~/.vim/tmp
 set expandtab
 set helplang=ja
@@ -697,6 +712,12 @@ let g:indent_guides_enable_on_vim_startup = 1
 colorscheme railscasts
 "colorscheme wombat256mod
 "colorscheme molokai
+
+"---------------------------------------------------------------------------
+" for ASCII keybord
+"---------------------------------------------------------------------------
+"noremap ; :
+"noremap : ;
 
 " ==  Matchpair Color
 let loaded_matchparen = 1
