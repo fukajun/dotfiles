@@ -17,6 +17,9 @@ export VISUAL=vim
 # LS color
 export LSCOLORS='gxfxcxdxbxGxDxabagacad'
 
+# For HOME/bin
+export PATH=${HOME}/bin:${PATH}
+
 # Load bashrc
 test -r ~/.bashrc && . ~/.bashrc
 # Load secret

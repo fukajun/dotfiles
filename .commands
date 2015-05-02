@@ -53,11 +53,7 @@ peco-cmd-history() {
 }
 
 #
-# git-now コマンド http://d.hatena.ne.jp/sinsoku/20101208/1291770514
-#
-alias be="bundle exec"
-alias tbe="RAILS_ENV=test bundle exec"
-alias dbe="RAILS_ENV=development bundle exec"
+# ggコマンド
 alias gg="gg_handler"
 gg_handler() {
   echo "----------------------"
@@ -66,38 +62,4 @@ gg_handler() {
   git status;
   echo "----------------------"
 }
-git-now() {
-  PREFIX="from now"
-  MESSAGE="[${PREFIX}] `date`"
 
-  if [ $# -eq 0 ]
-  then
-      git add -u
-      printf "${MESSAGE}\n\n%s" "`git diff --cached`" | git commit -F -
-  elif [ $1 != "--rebase" ]
-  then
-      git add $@
-      printf "${MESSAGE}\n\n%s" "`git diff --cached`" | git commit -F -
-  else
-      FIRST_NOW_COMMIT=`git log --pretty=oneline --grep="${PREFIX}" | tail -n 1 | cut -d " " -f 1`
-      INITIAL_COMMIT=`git log --pretty=oneline | tail -n 1 | cut -d " " -f 1`
-
-      if [ ${FIRST_NOW_COMMIT} != ${INITIAL_COMMIT} ]
-      then
-          git rebase -i ${FIRST_NOW_COMMIT}^
-      else
-          WORKING_BRANCH=`git branch -l | grep "*" | cut -d " " -f 2`
-
-          git checkout ${FIRST_NOW_COMMIT}
-          git commit --amend
-          git rebase --onto HEAD ${FIRST_NOW_COMMIT} ${WORKING_BRANCH}
-      fi
-  fi
-}
-
-# ALIAS
-# For bundle exec
-alias be='bundle exec'
-alias gst="git status -b -s&& git stash list"
-PATH=${HOME}/bin:${PATH}
-export PATH
