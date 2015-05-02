@@ -1,10 +1,26 @@
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm//scripts/rvm" # Load RVM into a shell session *as a function*
+# Alias
 alias be="bundle exec"
 
 export TERM=xterm-256color
+# For ghq
+export GOPATH=$HOME
+export PATH=$PATH:$GOPATH/bin
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
- . $(brew --prefix)/etc/bash_completion
-fi
-export RSENSE_HOME=$HOME/lib/rsense-0.3
+# For rbenv
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+
+# For bundle open
+export EDITOR=vim
+export BUNDLE_EDITOR=vim
+export VISUAL=vim
+
+# LS color
+export LSCOLORS='gxfxcxdxbxGxDxabagacad'
+
+# Load bashrc
+test -r ~/.bashrc && . ~/.bashrc
+# Load secret
+test -r ~/.secret && . ~/.secret
+
+
