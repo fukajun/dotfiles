@@ -40,9 +40,9 @@
 	preos = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h vfcommerce:`git cbr` -b vfcommerce:master;\""
 	prmaster = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h mrtaddy:`git cbr` -b mrtaddy:master;\""
 	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app2.ap-northeast-1 -C 'cd /ebs/webapps/omg-spree/current/ && git log | head -10'\""
-	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app2.ap-northeast-1 -C 'cd /ebs/webapps/omg-spree/current/ && git log --grep=\\\"Merge pull request\\\" origin/master | egrep -v \\\"^(commit|Merge:|Author:|Date:| +Merge pull)\\\" | egrep \\\"[^ ]\\\" | head -10 | sed \\\"s/\\[fi.*$//\\\" | sed \\\"s/^ */- /\\\"'\""
+	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app2.ap-northeast-1a -C 'cd /ebs/webapps/omg-spree/current/ && git log --grep=\\\"Merge pull request\\\" origin/master | egrep -v \\\"^(commit|Merge:|Author:|Date:| +Merge pull)\\\" | egrep \\\"[^ ]\\\" | head -10 | sed \\\"s/\\[fi.*$//\\\" | sed \\\"s/^ */- /\\\"'\""
 	release = "!$SHELL -c \"git mergelog;echo '--------------';git deployed;\""
-	tt = "!$SHELL -c \"git commit --allow-empty -m '$1 [ci skip]'\""
+	tt = "!$SHELL -c \"git commit --allow-empty -m '$1'\""
 	pl = pull origin master:master
   # branch time order
 	brt = "!$SHELL -c \"ls -tlr .git/refs/heads\""
