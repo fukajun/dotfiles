@@ -1,7 +1,7 @@
 #
 # For peco
-alias c=change-repo
-change-repo() {
+alias c=peco-change-repo
+peco-change-repo() {
   output1=$(ghq list -p)
   output2=$(find $HOME/Dropbox/fukajun -maxdepth 2 | grep '.git$' | sed 's/.git$//')
   select=$(echo "$output1\n$output2"  | peco)
@@ -11,8 +11,8 @@ change-repo() {
   cd $select
 }
 
-alias t=change-tmux
-change-tmux() {
+alias t=peco-change-tmux
+peco-change-tmux() {
   cnt=$(ps -ef | grep tmux | grep -c -v grep)
   if [ $cnt -eq 0 ]; then
     echo "No session"
@@ -44,15 +44,29 @@ peco-bundle-open() {
 
 alias h=peco-cmd-history
 peco-cmd-history() {
-  select=$(history | cut -d ' ' -f 5-  | sort -u | peco)
-  if [ "$select" == "" ]; then
+  select=$(history -n -r 1 | peco)
+  if [ -z "$select" ]; then
     return
   fi
-  echo $select
-  echo $select >&1
+  BUFFER="$select"
+  CURSOR=$#BUFFER
 }
+zle -N peco-cmd-history
+bindkey '^O' peco-cmd-history
 
-#
+alias gh=peco-git-log-hash
+peco-git-log-hash() {
+  git_log_format='%d %an: %s %ar %h'
+  select=$(git log --graph --pretty=format:"$git_log_format" | peco)
+  if [ -z "$select" ]; then
+    return
+  fi
+  BUFFER=$(echo $select | awk -F ' ' '{ print $NF }')
+  CURSOR=$#BUFFER
+}
+zle -N peco-git-log-hash
+bindkey '^x^g' peco-git-log-hash
+
 # ggコマンド
 alias gg="gg_handler"
 gg_handler() {
