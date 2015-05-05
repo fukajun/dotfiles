@@ -1,53 +1,42 @@
 [alias]
-	new = "!$SHELL -c \"git fetch &&  git checkout -b $1 origin/master\""
-	newc = "!$SHELL -c \"git fetch &&  git checkout -b $2 origin/$1\""
-	news = "!$SHELL -c \"git fetch &&  git checkout -b seor/$1 origin/master\""
-	stock = "!$SHELL -c \"git checkout -b `date +%Y-%m-%d-%H-%M`-wip && git add . && git commit -m `date +%Y-%m-%d-%H-%M-wip`\""
 	co = checkout
 	ci = commit
 	st = "status -s -b"
 	br = branch
-	di = diff
 	ad = add
-	diffc = diff --cached
 	l = log --stat
 	lp = log --pretty --graph
 	ll = log --oneline --left-right --graph
 	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
 	rst = reset
 	pom = "push origin master"
+	# diff
+	d  = diff
+	dc = diff --cached
 	# print current branch
-  #cbr = "!$SHELL -c \"git br|grep  '^*'|cut -f 2 -d ' '\""
 	cbr = rev-parse --abbrev-ref HEAD
+	# 
+	# Custom command
+	# new
+	new = "!$SHELL -c \"git fetch &&  git checkout -b $1 origin/master\""
+	newc = "!$SHELL -c \"git fetch &&  git checkout -b $2 origin/$1\""
+	news = "!$SHELL -c \"git fetch &&  git checkout -b seor/$1 origin/master\""
+	stock = "!$SHELL -c \"git checkout -b `date +%Y-%m-%d-%H-%M`-wip && git add . && git commit -m `date +%Y-%m-%d-%H-%M-wip`\""
 	# checkout new branch from master
 	cob = "!$SHELL -c \"git checkout -b $1 master\""
 	# delete all branch ignore master
 	brd = "!$SHELL -c \"git fetch; git branch --merge origin/${1} |grep -v '*'|grep -v \"origin/master\"|xargs git branch -d\""
-	mergelog = "!$SHELL -c 'git fetch; git log --grep=\"Merge pull request\" origin/master | egrep -v \"^(commit|Merge:|Author:|Date:| +Merge pull)\" | egrep \"[^ ]\" | head -10 | sed \"s/\\[fi.*$//\" | sed \"s/^ */- /\"' __dummy__"
-	# git update
-	u = "!sh -c 'git ft; git rsm; git delete-merged-branches'"
-	ft = fetch --prune
-	rsm = update-ref refs/heads/master origin/master
 	delete-merged-branches = !"git branch --merged master | grep -v master | grep -v '*' | xargs git branch -d"
+	# wip & reset wip
 	wip = "!$SHELL -c \"git add .;git commit -va -m '[wip]';\""
 	rwip = reset HEAD^
-  #pr = "!$SHELL -c \"git push origin $2; hub pull-request -h ${1}:${2}\""
-	prc = "!$SHELL -c \"git push origin $3; hub pull-request -h ${1}:${3} -b ${1}:${2}\""
-	#prs = "!$SHELL -c \"git push origin $1; hub pull-request -h mrtaddy:${1} -b mrtaddy:seo;\""
-	po = "!$SHELL -c \"git push origin `git cbr`\""
 	pr = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h ${1}:`git cbr` -b ${1}:${2};\""
-	prseo = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h mrtaddy:`git cbr` -b mrtaddy:seo;\""
-	preos = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h vfcommerce:`git cbr` -b vfcommerce:master;\""
-	prmaster = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h mrtaddy:`git cbr` -b mrtaddy:master;\""
-	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app2.ap-northeast-1 -C 'cd /ebs/webapps/omg-spree/current/ && git log | head -10'\""
-	deployed = "!$SHELL -c \"ssh mrtaddy@omg-app2.ap-northeast-1a -C 'cd /ebs/webapps/omg-spree/current/ && git log --grep=\\\"Merge pull request\\\" origin/master | egrep -v \\\"^(commit|Merge:|Author:|Date:| +Merge pull)\\\" | egrep \\\"[^ ]\\\" | head -10 | sed \\\"s/\\[fi.*$//\\\" | sed \\\"s/^ */- /\\\"'\""
 	release = "!$SHELL -c \"git mergelog;echo '--------------';git deployed;\""
 	tt = "!$SHELL -c \"git commit --allow-empty -m '$1'\""
 	pl = pull origin master:master
-  # branch time order
+	# branch time order
 	brt = "!$SHELL -c \"ls -tlr .git/refs/heads\""
-  brref = for-each-ref --sort='-*committerdate' --format="%(refname:short)" refs/heads/
- 
+	brref = for-each-ref --sort='-*committerdate' --format="%(refname:short)" refs/heads/
 
 [user]
 	name = J.Fukaya
@@ -70,4 +59,4 @@
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
 [ghq]
-  root = ~/src
+	root = ~/src
