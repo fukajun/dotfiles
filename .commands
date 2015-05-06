@@ -1,6 +1,28 @@
 #
-# For peco
-alias c=peco-change-repo
+# For peco (base)
+
+# peco cmd register
+peco_cmd_list=""
+add_peco_cmd(){
+  func_name=$1
+  description=$2
+  peco_cmd_list+="${func_name}: ${description}\n"
+}
+
+# Insert command line
+insert_line(){
+  BUFFER="$@"
+  CURSOR=$#BUFFER
+}
+
+#
+# For peco (command)
+peco-cmd-list(){
+  select=$(echo "$peco_cmd_list" | peco | awk -F : '{print $1}')
+  $select
+}
+zle -N peco-cmd-list
+
 peco-change-repo() {
   output1=$(ghq list -p)
   output2=$(find $HOME/Dropbox/fukajun -maxdepth 2 | grep '.git$' | sed 's/.git$//')
@@ -10,8 +32,8 @@ peco-change-repo() {
   fi
   cd $select
 }
+zle -N peco-change-repo
 
-alias t=peco-change-tmux
 peco-change-tmux() {
   cnt=$(ps -ef | grep tmux | grep -c -v grep)
   if [ $cnt -eq 0 ]; then
@@ -26,49 +48,63 @@ peco-change-tmux() {
   if [ -z "$session" ]; then
     return
   fi
-  session_id=$(echo $session | awk 'BEGIN{FS=":"}{print $1}')
+  session_id=$(echo $session | awk -F : '{print $1}')
   tmux attach-session -t $session_id
 }
+zle -N peco-change-tmux
 
-alias pb=peco-bundle-open
 peco-bundle-open() {
   select=$(bundle list | sed -e 's/^ *\* *//g' | peco)
   select_gem=$(echo $select | awk 'BEGIN{FS=" "}{print $1}')
-  echo $select_gem
   if [ -z "$select_gem" ]; then
     return
   fi
-  echo $select_gem
-  bundle open $select_gem
+  budle open $select_gem
 }
+zle -N peco-bundle-open
 
-alias h=peco-cmd-history
 peco-cmd-history() {
   select=$(history -n -r 1 | peco)
   if [ -z "$select" ]; then
     return
   fi
-  BUFFER="$select"
-  CURSOR=$#BUFFER
+  insert_line "$select"
 }
 zle -N peco-cmd-history
-bindkey '^O' peco-cmd-history
 
-alias gh=peco-git-log-hash
 peco-git-log-hash() {
   git_log_format='%d %an: %s %ar %h'
   select=$(git log --graph --pretty=format:"$git_log_format" | peco)
   if [ -z "$select" ]; then
     return
   fi
-  BUFFER=$(echo $select | awk -F ' ' '{ print $NF }')
-  CURSOR=$#BUFFER
+  select=$(echo $select | awk -F ' ' '{ print $NF }')
+  insert_line "$select"
 }
-zle -N peco-git-log-hash
-bindkey '^x^g' peco-git-log-hash
+zle -N peco-log-hash
 
-# ggコマンド
-alias gg="gg_handler"
+#
+# Setting alias
+alias c=peco-change-repo
+alias t=peco-change-tmux
+alias beo=peco-bundle-open
+
+#
+# Setting key bind
+bindkey '^xl'  peco-cmd-list
+bindkey '^xh'  peco-cmd-history
+bindkey '^xgh' peco-git-log-hash
+
+#
+# Add peco command list
+add_peco_cmd peco-change-repo  'ghq管理下のリポジトリディレクトリへ移動'
+add_peco_cmd peco-change-tmux  'tmuxのセッションを切り替え'
+add_peco_cmd peco-bundle-open  'bundle open'
+add_peco_cmd peco-cmd-history  'コマンド履歴'
+add_peco_cmd peco-git-log-hash 'git log の結果からhashを探す'
+
+#
+# Other commands
 gg_handler() {
   echo "----------------------"
   git log --oneline --stat | head -10
@@ -76,4 +112,4 @@ gg_handler() {
   git status;
   echo "----------------------"
 }
-
+alias gg="gg_handler"
