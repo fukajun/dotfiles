@@ -1,62 +1,58 @@
-[alias]
-	co = checkout
-	ci = commit
-	st = "status -s -b"
-	br = branch
-	ad = add
-	l = log --stat
-	lp = log --pretty --graph
-	ll = log --oneline --left-right --graph
-	lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
-	rst = reset
-	pom = "push origin master"
-	# diff
-	d  = diff
-	dc = diff --cached
-	# print current branch
-	cbr = rev-parse --abbrev-ref HEAD
-	# 
-	# Custom command
-	# new
-	new = "!$SHELL -c \"git fetch &&  git checkout -b $1 origin/master\""
-	newc = "!$SHELL -c \"git fetch &&  git checkout -b $2 origin/$1\""
-	news = "!$SHELL -c \"git fetch &&  git checkout -b seor/$1 origin/master\""
-	stock = "!$SHELL -c \"git checkout -b `date +%Y-%m-%d-%H-%M`-wip && git add . && git commit -m `date +%Y-%m-%d-%H-%M-wip`\""
-	# checkout new branch from master
-	cob = "!$SHELL -c \"git checkout -b $1 master\""
-	# delete all branch ignore master
-	brd = "!$SHELL -c \"git fetch; git branch --merge origin/${1} |grep -v '*'|grep -v \"origin/master\"|xargs git branch -d\""
-	delete-merged-branches = !"git branch --merged master | grep -v master | grep -v '*' | xargs git branch -d"
-	# wip & reset wip
-	wip = "!$SHELL -c \"git add .;git commit -va -m '[wip]';\""
-	rwip = reset HEAD^
-	pr = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h ${1}:`git cbr` -b ${1}:${2};\""
-	release = "!$SHELL -c \"git mergelog;echo '--------------';git deployed;\""
-	tt = "!$SHELL -c \"git commit --allow-empty -m '$1'\""
-	pl = pull origin master:master
-	# branch time order
-	brt = "!$SHELL -c \"ls -tlr .git/refs/heads\""
-	brref = for-each-ref --sort='-*committerdate' --format="%(refname:short)" refs/heads/
-
 [user]
-	name = J.Fukaya
-	email = fukajun.shark@gmail.com
+  name  = J.Fukaya
+  email = fukajun.shark@gmail.com
 [color]
-	branch = true
-	diff = true
-	interactive = true
-	status = true
-	ui = auto
+  branch      = true
+  diff        = true
+  interactive = true
+  status      = true
+  ui          = auto
 [core]
-	editor = vim
-	excludesfile = /Users/fukajun/.gitignore_global
+  editor = vim
+  excludesfile = ~/.gitignore_global
 [rebase]
-	autosquash = true
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  autosquash = true
 [ghq]
-	root = ~/src
+  root = ~/src
+[alias]
+  co  = checkout
+  ci  = commit
+  st  = status -s -b
+  br  = branch
+  ad  = add
+  l   = log --stat
+  lp  = log --pretty --graph
+  ll  = log --oneline --left-right --graph
+  lll = log --graph --pretty=format:'%Cblue%h%Creset%d %Cgreen%an%Creset: %s %Cblue%ar%Creset'
+  rst = reset
+  pom = push origin master
+  # Diff
+  d  = diff
+  dc = diff --cached
+  # Print current branch
+  cbr = rev-parse --abbrev-ref HEAD
+  # Create branch from origin/master after fetch
+  new = "!$SHELL -c \"git fetch &&  git checkout -b $1 origin/master\""
+  stock = "!$SHELL -c \"git checkout -b `date +%Y-%m-%d-%H-%M`-wip && git add . && git commit -m `date +%Y-%m-%d-%H-%M-wip`\""
+  # Checkout new branch from master
+  cob = "!$SHELL -c \"git checkout -b $1 master\""
+  # Delete all branch ignore master
+  brd = "!$SHELL -c \"git fetch; git branch --merge origin/${1} |grep -v '*'|grep -v \"origin/master\"|xargs git branch -d\""
+  delete-merged-branches = !"git branch --merged master | grep -v master | grep -v '*' | xargs git branch -d"
+  # Wip & Reverse wip
+  wip = "!$SHELL -c \"git add .;git commit -va -m '[wip]';\""
+  rwip = reset HEAD^
+  # Make pull reqeust
+  pr = "!$SHELL -c \"git push origin `git cbr`; hub pull-request -h ${1}:`git cbr` -b ${1}:${2};\""
+  # Display merge pull requests on master and production server
+  release = "!$SHELL -c \"git mergelog; echo '--------------'; git deployed;\""
+  # Create empty commit
+  tt = "!$SHELL -c \"git commit --allow-empty -m '$1'\""
+  # Branch time order
+  brt = "!$SHELL -c \"ls -tlr .git/refs/heads\""
+  # Deploy to heroku
+  hdeploy = "!$SHELL -c \"git fetch; git push heroku origin/master:master\""
+  brref = for-each-ref --sort='-*committerdate' --format="%(refname:short)" refs/heads/
+  # Etc....
+  fmerge = "!$SHELL -c \"git fetch; git merge origin/`git cbr`\""
+  pl = pull origin master:master
